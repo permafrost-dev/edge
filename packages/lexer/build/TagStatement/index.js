@@ -23,7 +23,7 @@ class TagStatement {
         this.props = {
             name: '',
             jsArg: '',
-            jsArgOffset: 0,
+            raw: '',
             position: {
                 start: this.startPosition,
                 end: this.startPosition - 1
@@ -31,6 +31,7 @@ class TagStatement {
         };
         this.currentProp = 'name';
         this.internalParens = 0;
+        this.firstTimeCalled = false;
     }
     /**
      * Tells whether statement is seeking for more content
@@ -81,7 +82,6 @@ class TagStatement {
      * @returns void
      */
     startStatement() {
-        this.props.jsArgOffset++;
         this.currentProp = 'jsArg';
         this.started = true;
     }
@@ -108,13 +108,7 @@ class TagStatement {
      * @returns void
      */
     feedChar(char, charCode) {
-        if (this.currentProp === 'name') {
-            this.props.jsArgOffset++;
-        }
-        /**
-         * Do not consume whitespace when currentProp is name
-         */
-        if (this.isWhiteSpace(char) && this.currentProp === 'name') {
+        if (this.isWhiteSpace(char)) {
             return;
         }
         if (charCode === OPENING_BRACE) {
@@ -164,15 +158,30 @@ class TagStatement {
         this.props.position.end++;
         if (!this.seekable) {
             this.props.name = line.trim();
-            this.props.jsArgOffset = this.props.name.length;
+            this.props.raw = line;
             this.ended = true;
             this.started = true;
             return;
+        }
+        /**
+         * We append new line to the raw string when
+         * feed method is called more than one
+         * time.
+         */
+        if (this.firstTimeCalled) {
+            this.props.raw += '\n';
+        }
+        else {
+            this.firstTimeCalled = true;
         }
         const chars = line.split('');
         while (chars.length) {
             const char = chars.shift();
             const charCode = char.charCodeAt(0);
+            /**
+             * Maintain a proper raw string for debugging.
+             */
+            this.props.raw += char;
             if (this.isStartOfStatement(charCode)) {
                 this.startStatement();
             }

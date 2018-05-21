@@ -7,6 +7,7 @@ declare class TagStatement implements Statement {
     props: Prop;
     private currentProp;
     private internalParens;
+    private firstTimeCalled;
     constructor(startPosition: number, seekable?: boolean);
     /**
      * Tells whether statement is seeking for more content

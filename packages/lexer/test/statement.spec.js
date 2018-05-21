@@ -25,7 +25,7 @@ test.group('Statement', () => {
     assert.deepEqual(statement.props, {
       name: 'if',
       jsArg: 'username',
-      jsArgOffset: 3,
+      raw: 'if(username)',
       position: { start: 1, end: 1 }
     })
   })
@@ -39,8 +39,8 @@ test.group('Statement', () => {
 
     assert.deepEqual(statement.props, {
       name: 'if',
-      jsArg: '(2 + 2)',
-      jsArgOffset: 3,
+      jsArg: '(2+2)',
+      raw: 'if((2 + 2))',
       position: { start: 1, end: 1 }
     })
   })
@@ -63,11 +63,10 @@ test.group('Statement', () => {
     const template = `
     if (
       2 + 2 === 4
-    )
-    `
+    )`
+
+    template
       .split('\n')
-      .map((line) => line.trim())
-      .filter((line) => !!line)
       .forEach((line) => {
         statement.feed(line)
       })
@@ -77,9 +76,9 @@ test.group('Statement', () => {
 
     assert.deepEqual(statement.props, {
       name: 'if',
-      jsArg: '2 + 2 === 4',
-      jsArgOffset: 4,
-      position: { start: 1, end: 3 }
+      jsArg: '2+2===4',
+      raw: template,
+      position: { start: 1, end: 4 }
     })
   })
 
@@ -94,7 +93,7 @@ test.group('Statement', () => {
     assert.deepEqual(statement.props, {
       name: 'if',
       jsArg: '',
-      jsArgOffset: 2,
+      raw: 'if',
       position: { start: 1, end: 1 }
     })
   })
@@ -110,7 +109,7 @@ test.group('Statement', () => {
     assert.deepEqual(statement.props, {
       name: 'if',
       jsArg: '',
-      jsArgOffset: 3,
+      raw: 'if(',
       position: { start: 1, end: 1 }
     })
   })
@@ -119,44 +118,6 @@ test.group('Statement', () => {
     const statement = new TagStatement(1)
     const fn = () => statement.feed('if)')
     assert.throw(fn, 'Unexpected token ). Wrap statement inside ()')
-  })
-
-  test('do not trim whitespace from jsArg', (assert) => {
-    const statement = new TagStatement(1)
-    statement.feed('if (2 + 2   === 4)')
-
-    assert.equal(statement.ended, true)
-    assert.equal(statement.started, true)
-
-    assert.deepEqual(statement.props, {
-      name: 'if',
-      jsArg: '2 + 2   === 4',
-      jsArgOffset: 4,
-      position: { start: 1, end: 1 }
-    })
-  })
-
-  test('do not trim new line spaces from jsArg', (assert) => {
-    const statement = new TagStatement(1)
-    const template = dedent`if(
-      2 + 2
-      ===
-      4
-    )`
-
-      template
-      .split('\n')
-      .forEach((line) => statement.feed(line))
-
-    assert.equal(statement.ended, true)
-    assert.equal(statement.started, true)
-
-    assert.deepEqual(statement.props, {
-      name: 'if',
-      jsArg: '  2 + 2  ===  4',
-      jsArgOffset: 3,
-      position: { start: 1, end: 5 }
-    })
   })
 
   test('do not seek statements which are not seekable', (assert) => {
@@ -169,7 +130,7 @@ test.group('Statement', () => {
     assert.deepEqual(statement.props, {
       name: 'else',
       jsArg: '',
-      jsArgOffset: 4,
+      raw: 'else',
       position: { start: 1, end: 1 }
     })
   })
@@ -184,7 +145,7 @@ test.group('Statement', () => {
     assert.deepEqual(statement.props, {
       name: 'else',
       jsArg: '',
-      jsArgOffset: 4,
+      raw: '  else  ',
       position: { start: 1, end: 1 }
     })
   })

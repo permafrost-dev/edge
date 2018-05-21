@@ -20,12 +20,13 @@ const OPENING_BRACE = 40
 const CLOSING_BRACE = 41
 
 class TagStatement implements Statement {
-  started: boolean;
-  ended: boolean;
+  started: boolean
+  ended: boolean
   props: Prop
 
-  private currentProp: string;
+  private currentProp: string
   private internalParens: number
+  private firstTimeCalled: boolean
 
   constructor (private startPosition: number, private seekable:boolean = true) {
     this.started = false
@@ -34,7 +35,7 @@ class TagStatement implements Statement {
     this.props = {
       name: '',
       jsArg: '',
-      jsArgOffset: 0,
+      raw: '',
       position: {
         start: this.startPosition,
         end: this.startPosition - 1
@@ -43,6 +44,7 @@ class TagStatement implements Statement {
 
     this.currentProp = 'name'
     this.internalParens = 0
+    this.firstTimeCalled = false
   }
 
   /**
@@ -98,7 +100,6 @@ class TagStatement implements Statement {
    * @returns void
    */
   private startStatement (): void {
-    this.props.jsArgOffset++
     this.currentProp = 'jsArg'
     this.started = true
   }
@@ -127,14 +128,7 @@ class TagStatement implements Statement {
    * @returns void
    */
   private feedChar (char: string, charCode: number): void {
-    if (this.currentProp === 'name') {
-      this.props.jsArgOffset++
-    }
-
-    /**
-     * Do not consume whitespace when currentProp is name
-     */
-    if (this.isWhiteSpace(char) && this.currentProp === 'name') {
+    if (this.isWhiteSpace(char)) {
       return
     }
 
@@ -188,20 +182,34 @@ class TagStatement implements Statement {
     }
 
     this.props.position.end++
-
     if (!this.seekable) {
       this.props.name = line.trim()
-      this.props.jsArgOffset = this.props.name.length
+      this.props.raw = line
       this.ended = true
       this.started = true
       return
     }
 
-    const chars = line.split('')
+    /**
+     * We append new line to the raw string when
+     * feed method is called more than one
+     * time.
+     */
+    if (this.firstTimeCalled) {
+      this.props.raw += '\n'
+    } else {
+      this.firstTimeCalled = true
+    }
 
+    const chars = line.split('')
     while (chars.length) {
       const char: string = chars.shift()
       const charCode = char.charCodeAt(0)
+
+      /**
+       * Maintain a proper raw string for debugging.
+       */
+      this.props.raw += char
 
       if (this.isStartOfStatement(charCode)) {
         this.startStatement()
