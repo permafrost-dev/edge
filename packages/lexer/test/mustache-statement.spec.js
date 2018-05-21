@@ -160,7 +160,7 @@ test.group('Mustache Statement', () => {
     })
   })
 
-  test('mixing emustache and mustache make statement to keep to seeking', (assert) => {
+  test('mixing emustache and mustache make statement to keep on seeking', (assert) => {
     const statement = new MustacheStatement(1)
     statement.feed(`Welcome {{{ username }}`)
 

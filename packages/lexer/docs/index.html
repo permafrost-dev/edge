@@ -1,0 +1,309 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>edge-lexer</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">edge-lexer</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1> edge-lexer</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<h1 id="edge-lexer">Edge lexer</h1>
+				<p>Edge lexer detects tags from any markup language and converts into tokens. Later these tokens with a Javascript parser like <code>esprima</code> or <code>babylon</code> to complete a logical template engine ( this is what egde does ).</p>
+				<p>This guide covers the syntax and semantics of the Tags.</p>
+				<h2 id="what-is-a-tag-">What is a tag?</h2>
+				<p>A tag is block of code, which is used to define behavior in any markup language. A tag can be block level tag or an inline tag.</p>
+				<p>Lexer doesn&#39;t define the behavior of the tag, it&#39;s job is to recognize it and then parse it into tokens.</p>
+				<p><strong>Block level</strong></p>
+				<pre><code>Here <span class="hljs-keyword">is</span> <span class="hljs-keyword">some</span> <span class="hljs-built_in">text</span>
+
+@<span class="hljs-keyword">if</span>(isLogged)
+ Your token <span class="hljs-keyword">is</span> <span class="hljs-number">12345678</span>
+@endif
+</code></pre><p><strong>Inline</strong></p>
+				<pre><code>@<span class="hljs-keyword">include</span>('<span class="hljs-keyword">some</span>-<span class="hljs-keyword">file</span>')
+</code></pre><p>The difference between a block and inline tag is that, a block level tag can contain body and an inline tag never contains a body.</p>
+				<p>Let&#39;s see some more examples to understand the syntax properly.</p>
+				<h4 id="simple-block-level">Simple block level</h4>
+				<pre><code><span class="hljs-variable">@if</span>(loggedIn)
+<span class="hljs-variable">@endif</span>
+</code></pre><h4 id="block-level-with-whitespace-">Block level (with whitespace)</h4>
+				<p>Edge lexer is whitespace tolerant.</p>
+				<pre><code><span class="hljs-variable">@if</span> (loggedIn)
+<span class="hljs-variable">@endif</span>
+</code></pre><h4 id="block-level-self-closing-">Block level (self closing)</h4>
+				<p>Optionally block level tags can self close themselves by adding <code>!</code> after the <code>@</code> symbol.</p>
+				<pre><code>@!<span class="hljs-keyword">component</span>('<span class="hljs-keyword">form</span>.<span class="hljs-keyword">input</span>')
+</code></pre><h4 id="block-level-multiple-lines-">Block level (multiple lines)</h4>
+				<p>Edge also allows splitting tag statements into multiple lines.</p>
+				<pre><code><span class="hljs-variable">@if</span>(
+  isLogged &amp;&amp;
+  isAdmin
+)
+
+<span class="hljs-variable">@endif</span>
+</code></pre><h4 id="simple-inline">Simple inline</h4>
+				<pre><code>@<span class="hljs-keyword">include</span>('<span class="hljs-keyword">partials</span>.<span class="hljs-keyword">header</span>')
+</code></pre><h4 id="inline-with-whitespace-">Inline (with whitespace)</h4>
+				<p>Just like <code>block</code> tags, inline tags can also have spaces.</p>
+				<pre><code>@<span class="hljs-keyword">include</span> (<span class="hljs-symbol">'partials</span>.header')
+</code></pre><h4 id="inline-multiple-lines-">Inline (multiple lines)</h4>
+				<pre><code><span class="hljs-meta">@include(
+  <span class="hljs-meta-string">'partials.header'</span>
+)</span>
+</code></pre><hr>
+				<h2 id="invalid-syntax">Invalid Syntax</h2>
+				<p>Above was the list of all the valid syntax to define/use a tag. Following is list of invalid syntax</p>
+				<h4 id="space-after-invalid-">Space after <code>@</code> [invalid]</h4>
+				<p>You cannot have a space after the <code>@</code> symbol.</p>
+				<pre><code>@ <span class="hljs-keyword">if</span>()
+
+<span class="hljs-meta">@endif</span>
+</code></pre><h4 id="must-be-at-beginning-of-the-line-invalid-">Must be at beginning of the line [invalid]</h4>
+				<p>Each tag statement must be in it&#39;s own line.</p>
+				<ol>
+					<li><code>@&lt;tagname&gt;</code> in it&#39;s own line.</li>
+					<li><code>@end&lt;tagname&gt;</code> in it&#39;s own line too.</li>
+				</ol>
+				<pre><code>Hello <span class="hljs-meta">@if(username)</span>
+  {{ username }}
+<span class="hljs-meta">@endif</span>
+</code></pre><p>Following is also invalid</p>
+				<pre><code><span class="hljs-meta">@if(username)</span> {{ username }}
+<span class="hljs-meta">@endif</span>
+</code></pre><p>Or</p>
+				<pre><code><span class="hljs-meta">@if(username)</span> {{ username }} <span class="hljs-meta">@endif</span>
+</code></pre><h2 id="tokens">Tokens</h2>
+				<p>Following is the structure of the lexer Tokens.</p>
+				<pre><code class="lang-js">{
+  <span class="hljs-attr">type</span>: <span class="hljs-string">'&lt;NodeType&gt;'</span>,
+  <span class="hljs-attr">value</span>: <span class="hljs-string">'&lt;NodeValue&gt;'</span>,
+  <span class="hljs-attr">properties</span>: {},
+  <span class="hljs-attr">position</span>: {
+    <span class="hljs-attr">start</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">end</span>: <span class="hljs-number">2</span>
+  },
+  <span class="hljs-attr">children</span>: []        <span class="hljs-comment">// nested nodes</span>
+}
+</code></pre>
+				<h4 id="type">type</h4>
+				<p>Type defines the type of the node. There are only 2 types of nodes.</p>
+				<ol>
+					<li><strong>raw</strong> - The line of code with just markup.</li>
+					<li><strong>tag</strong> - The line(s) represents a tag.</li>
+				</ol>
+				<h4 id="value">value</h4>
+				<p>The value will contain the raw text if type is <code>raw</code> and will be <code>undefined</code>, if type is <code>tag</code>.</p>
+				<h4 id="properties">properties</h4>
+				<p>The properties contains a key/value pair of properties related to the tag.</p>
+				<pre><code class="lang-js">{
+  <span class="hljs-attr">properties</span>: {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'if'</span>   
+    jsArg: <span class="hljs-string">'2 + 2 === 4'</span>
+  }
+}
+</code></pre>
+				<h4 id="position">position</h4>
+				<p>The position of the node in the raw code. Since Edge lexer deals with block level content only, there is no need to store <code>columns</code>.</p>
+				<p>Also line numbers are not based off <code>0</code> index.</p>
+				<pre><code class="lang-js">{
+  <span class="hljs-attr">position</span>: {
+    <span class="hljs-attr">start</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">end</span>: <span class="hljs-number">3</span>
+  }
+}
+</code></pre>
+				<h4 id="children">children</h4>
+				<p>Children will be an array of nested nodes.</p>
+				<h2 id="examples">Examples</h2>
+				<p>Let&#39;s see the output of couple of examples. We are using <code>HTML</code> as the markup language, however you are free to use any markup language.</p>
+				<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span> Page title <span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+
+@if(username)
+  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span> Welcome {{ username }} <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+@endif
+</code></pre>
+				<p>Output</p>
+				<pre><code><span class="hljs-string">[</span>
+  <span class="hljs-string">{</span>
+<span class="hljs-attr">    type:</span> <span class="hljs-string">'raw'</span><span class="hljs-string">,</span>
+<span class="hljs-attr">    value:</span> <span class="hljs-string">'&lt;h1&gt; Page title &lt;/h1&gt;'</span><span class="hljs-string">,</span>
+<span class="hljs-attr">    position:</span> <span class="hljs-string">{</span>
+<span class="hljs-attr">      start:</span> <span class="hljs-number">1</span><span class="hljs-string">,</span>
+<span class="hljs-attr">      end:</span> <span class="hljs-number">1</span>
+    <span class="hljs-string">}</span>
+  <span class="hljs-string">},</span>
+  <span class="hljs-string">{</span>
+<span class="hljs-attr">    type:</span> <span class="hljs-string">'raw'</span><span class="hljs-string">,</span>
+<span class="hljs-attr">    value:</span> <span class="hljs-string">''</span><span class="hljs-string">,</span>
+<span class="hljs-attr">    position:</span> <span class="hljs-string">{</span>
+<span class="hljs-attr">      start:</span> <span class="hljs-number">2</span><span class="hljs-string">,</span>
+<span class="hljs-attr">      end:</span> <span class="hljs-number">2</span>
+    <span class="hljs-string">}</span>
+  <span class="hljs-string">},</span>
+  <span class="hljs-string">{</span>
+<span class="hljs-attr">    type:</span> <span class="hljs-string">'tag'</span><span class="hljs-string">,</span>
+<span class="hljs-attr">    properties:</span> <span class="hljs-string">{</span>
+<span class="hljs-attr">      name:</span> <span class="hljs-string">'if'</span><span class="hljs-string">,</span>
+<span class="hljs-attr">      jsArg:</span> <span class="hljs-string">'username'</span>
+    <span class="hljs-string">},</span>
+<span class="hljs-attr">    position:</span> <span class="hljs-string">{</span>
+<span class="hljs-attr">      start:</span> <span class="hljs-number">3</span><span class="hljs-string">,</span>
+<span class="hljs-attr">      end:</span> <span class="hljs-number">5</span>
+    <span class="hljs-string">},</span>
+<span class="hljs-attr">    children:</span> <span class="hljs-string">[</span>
+      <span class="hljs-string">{</span>
+<span class="hljs-attr">        type:</span> <span class="hljs-string">'raw'</span><span class="hljs-string">,</span>
+<span class="hljs-attr">        value:</span> <span class="hljs-string">'&lt;p&gt; Welcome <span class="hljs-template-variable">{{ username }}</span> &lt;/p&gt;'</span><span class="hljs-string">,</span>
+<span class="hljs-attr">        position:</span> <span class="hljs-string">{</span>
+<span class="hljs-attr">          start:</span> <span class="hljs-number">4</span><span class="hljs-string">,</span>
+<span class="hljs-attr">          end:</span> <span class="hljs-number">4</span>
+        <span class="hljs-string">}</span>
+      <span class="hljs-string">}</span>
+    <span class="hljs-string">]</span>
+  <span class="hljs-string">}</span>
+<span class="hljs-string">]</span>
+</code></pre>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/lexer.html">Lexer</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>

@@ -1,15 +1,16 @@
 {
   "name": "edge-lexer",
   "version": "1.0.0",
-  "description": "",
+  "description": "Parses raw markup files to converts them to Tokens",
   "main": "index.js",
   "scripts": {
-    "build": "flow-remove-types src/ -d dist/",
-    "flow": "flow"
+    "pretest": "tsc",
+    "test": "japa",
+    "build": "tsc && typedoc --out docs"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["edge", "template", "template-engine"],
+  "author": "virk",
+  "license": "MIT",
   "devDependencies": {
     "@types/node": "^10.1.2",
     "dedent": "^0.7.0",

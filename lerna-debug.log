@@ -1,25 +1,49 @@
-0 silly input [ '../lexer' ]
-1 silly flags { _: [ 'import' ],
+0 silly input [ 'test' ]
+1 silly flags { _: [ 'run' ],
 1 silly flags   'reject-cycles': false,
 1 silly flags   rejectCycles: false,
-1 silly flags   pathToRepo: '../lexer' }
+1 silly flags   script: 'test',
+1 silly flags   args: [] }
 2 verbose rootPath /Users/harminder/code/edge/main
 3 info version 2.11.0
-4 silly isInitialized
-5 silly isInitialized true
-6 silly existsSync /Users/harminder/code/edge/main/VERSION
-7 silly initialize attempt
-8 silly statSync /Users/harminder/code/edge/lexer
-9 silly getWorkspaceRoot
-10 verbose getWorkspaceRoot /Users/harminder/code/edge/main
-11 silly existsSync /Users/harminder/code/edge/main/packages/lexer
-12 silly getCurrentSHA
-13 error initialize caught error
-14 error Error: fatal: ambiguous argument 'HEAD': unknown revision or path not in the working tree.
-14 error Use '--' to separate paths from revisions, like this:
-14 error 'git <command> [<revision>...] -- [<file>...]'
-14 error
-14 error     at Function.module.exports.sync (/Users/harminder/.nvm/versions/node/v9.8.0/lib/node_modules/lerna/node_modules/execa/index.js:303:26)
-14 error     at Function.execSync (/Users/harminder/.nvm/versions/node/v9.8.0/lib/node_modules/lerna/lib/ChildProcessUtilities.js:59:30)
-14 error     at Function.getCurrentSHA (/Users/harminder/.nvm/versions/node/v9.8.0/lib/node_modules/lerna/lib/GitUtilities.js:212:49)
-14 error     at ImportCommand.initialize (/Users/harminder/.nvm/versions/node/v9.8.0/lib/node_modules/lerna/lib/commands/ImportCommand.js:155:51)
+4 silly existsSync /Users/harminder/code/edge/main/VERSION
+5 silly initialize attempt
+6 silly initialize success
+7 silly execute attempt
+8 silly runScriptInDir test [] lexer
+9 silly getExecOpts { cwd: '/Users/harminder/code/edge/main/packages/lexer' }
+10 error test Errored while running script in 'edge-lexer'
+11 error execute callback with error
+12 error Error: Command failed: npm run test
+12 error npm ERR! code ELIFECYCLE
+12 error npm ERR! errno 1
+12 error npm ERR! edge-lexer@1.0.0 test: `japa`
+12 error npm ERR! Exit status 1
+12 error npm ERR!
+12 error npm ERR! Failed at the edge-lexer@1.0.0 test script.
+12 error npm ERR! This is probably not a problem with npm. There is likely additional logging output above.
+12 error
+12 error npm ERR! A complete log of this run can be found in:
+12 error npm ERR!     /Users/harminder/.npm/_logs/2018-05-21T10_16_57_564Z-debug.log
+12 error
+12 error > edge-lexer@1.0.0 pretest /Users/harminder/code/edge/main/packages/lexer
+12 error > tsc
+12 error
+12 error
+12 error > edge-lexer@1.0.0 test /Users/harminder/code/edge/main/packages/lexer
+12 error > japa
+12 error
+12 error { Error: Cannot find module '../dist/Tokenizer'
+12 error     at Function.Module._resolveFilename (module.js:543:15)
+12 error     at Function.Module._load (module.js:470:25)
+12 error     at Module.require (module.js:593:17)
+12 error     at require (internal/module.js:11:18)
+12 error     at Object.<anonymous> (/Users/harminder/code/edge/main/packages/lexer/test/tokenizer.spec.js:14:19)
+12 error     at Module._compile (module.js:649:30)
+12 error     at Object.Module._extensions..js (module.js:660:10)
+12 error     at Module.load (module.js:561:32)
+12 error     at tryModuleLoad (module.js:501:12)
+12 error     at Function.Module._load (module.js:493:3) code: 'MODULE_NOT_FOUND' }
+12 error
+12 error     at Promise.all.then.arr (/Users/harminder/.nvm/versions/node/v9.8.0/lib/node_modules/lerna/node_modules/execa/index.js:236:11)
+12 error     at <anonymous>
