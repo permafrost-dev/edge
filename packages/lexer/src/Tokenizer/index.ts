@@ -1,8 +1,8 @@
 /**
  * @module Lexer
- */
+*/
 
- /**
+/**
 * edge-lexer
 *
 * (c) Harminder Virk <virk@adonisjs.com>
@@ -247,4 +247,4 @@ class Tokenizer {
   }
 }
 
-module.exports = Tokenizer
+export = Tokenizer

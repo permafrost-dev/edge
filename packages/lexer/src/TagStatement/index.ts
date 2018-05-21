@@ -1,4 +1,8 @@
 /**
+ * @module Lexer
+*/
+
+/**
 * edge-lexer
 *
 * (c) Harminder Virk <virk@adonisjs.com>
@@ -15,9 +19,6 @@ const whitespaceRegex = WhitespaceRegex()
 const OPENING_BRACE = 40
 const CLOSING_BRACE = 41
 
-/**
- * @module Lexer
- */
 class TagStatement implements Statement {
   started: boolean;
   ended: boolean;
