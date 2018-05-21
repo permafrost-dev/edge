@@ -1,4 +1,8 @@
 /**
+ * @module Lexer
+*/
+
+/**
 * edge-lexer
 *
 * (c) Harminder Virk <virk@adonisjs.com>
@@ -12,9 +16,6 @@ import { Statement, MustacheProp } from '../Contracts'
 const OPENING_BRACE = 123
 const CLOSING_BRACE = 125
 
-/**
- * @module Lexer
- */
 class MustacheStatement implements Statement {
   public started: boolean
   public ended: boolean
@@ -53,7 +54,7 @@ class MustacheStatement implements Statement {
    *
    * @returns null
    */
-  getName (chars: string[], charCode: number): null | string {
+  private getName (chars: string[], charCode: number): null | string {
     if (charCode !== OPENING_BRACE || !chars.length) {
       return null
     }
@@ -98,7 +99,7 @@ class MustacheStatement implements Statement {
    *
    * @returns boolean
    */
-  isClosing (chars: string[], charCode: number): boolean {
+  private isClosing (chars: string[], charCode: number): boolean {
     if (charCode !== CLOSING_BRACE || this.internalBraces !== 0) {
       return false
     }
@@ -157,7 +158,7 @@ class MustacheStatement implements Statement {
    *
    * @returns void
    */
-  processChar (chars: string[], char: string): void {
+  private processChar (chars: string[], char: string): void {
     let name = null
     const charCode = char.charCodeAt(0)
 
