@@ -11,7 +11,8 @@
 * file that was distributed with this source code.
 */
 
-import { Statement, MustacheProp } from '../Contracts'
+import { Statement, MustacheProp, WhiteSpaceModes } from '../Contracts'
+import CharBucket = require('../CharBucket')
 
 const OPENING_BRACE = 123
 const CLOSING_BRACE = 125
@@ -20,23 +21,27 @@ class MustacheStatement implements Statement {
   public started: boolean
   public ended: boolean
   public props: MustacheProp
+
   private currentProp: string
   private internalBraces: number
+  private internalProps: null | { jsArg: CharBucket, textLeft: CharBucket, textRight: CharBucket }
 
-  constructor (private startPosition: number) {
+  constructor (public startPosition: number) {
     this.started = false
     this.ended = false
 
     this.props = {
       name: '',
       jsArg: '',
-      jsArgOffset: 0,
+      raw: '',
       textLeft: '',
-      textRight: '',
-      position: {
-        start: this.startPosition,
-        end: this.startPosition - 1
-      }
+      textRight: ''
+    }
+
+    this.internalProps = {
+      jsArg: new CharBucket(WhiteSpaceModes.CONTROLLED),
+      textLeft: new CharBucket(WhiteSpaceModes.ALL),
+      textRight: new CharBucket(WhiteSpaceModes.ALL)
     }
 
     this.internalBraces = 0
@@ -71,6 +76,7 @@ class MustacheStatement implements Statement {
     }
 
     chars.shift()
+    this.props.raw += '{{'
     if (!chars.length) {
       return 'mustache'
     }
@@ -87,6 +93,7 @@ class MustacheStatement implements Statement {
     }
 
     chars.shift()
+    this.props.raw += '{'
     return 'emustache'
   }
 
@@ -115,6 +122,7 @@ class MustacheStatement implements Statement {
       if (next === CLOSING_BRACE && nextToNext === CLOSING_BRACE) {
         chars.shift()
         chars.shift()
+        this.props.raw += '}}'
         return true
       }
 
@@ -130,6 +138,7 @@ class MustacheStatement implements Statement {
 
       if (next === CLOSING_BRACE) {
         chars.shift()
+        this.props.raw += '}'
         return true
       }
 
@@ -163,6 +172,13 @@ class MustacheStatement implements Statement {
     const charCode = char.charCodeAt(0)
 
     /**
+     * Store raw statement
+     */
+    if (this.currentProp === 'jsArg') {
+      this.props.raw += char
+    }
+
+    /**
      * Only process name, when are not in inside mustache
      * statement.
      */
@@ -170,23 +186,48 @@ class MustacheStatement implements Statement {
       name = this.getName(chars, charCode)
     }
 
+    /**
+     * When a name is found, we consider it as a start
+     * of `mustache` statement
+     */
     if (name) {
       this.props.name = name
       this.started = true
+      this.setProp()
       this.currentProp = 'jsArg'
-    } else if (this.started && !this.ended && this.isClosing(chars, charCode)) {
+      return
+    }
+
+    /**
+     * If statement was started and not ended and is a closing
+     * tag, then close mustache
+     */
+    if (this.started && !this.ended && this.isClosing(chars, charCode)) {
+      this.setProp()
       this.currentProp = 'textRight'
       this.ended = true
-    } else {
-      if (charCode === OPENING_BRACE) {
-        this.internalBraces++
-      }
-
-      if (charCode === CLOSING_BRACE) {
-        this.internalBraces--
-      }
-      this.props[this.currentProp] += char
+      return
     }
+
+    if (charCode === OPENING_BRACE) {
+      this.internalBraces++
+    }
+
+    if (charCode === CLOSING_BRACE) {
+      this.internalBraces--
+    }
+
+    this.internalProps[this.currentProp].feed(char)
+  }
+
+  /**
+   * Sets the value from internal prop to the public prop
+   * as a string
+   *
+   * @returns void
+   */
+  private setProp (): void {
+    this.props[this.currentProp] = this.internalProps[this.currentProp].get()
   }
 
   /**
@@ -202,12 +243,18 @@ class MustacheStatement implements Statement {
       throw new Error(`Unexpected token {${line}}`)
     }
 
+    this.props.raw = this.props.raw ? `${this.props.raw}\n` : this.props.raw
+
     const chars = line.split('')
-    this.props.position.end++
 
     while (chars.length) {
       const char = chars.shift()
       this.processChar(chars, char)
+    }
+
+    if (!this.seeking) {
+      this.setProp()
+      this.internalProps = null
     }
   }
 }

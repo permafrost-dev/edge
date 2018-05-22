@@ -11,10 +11,8 @@
 * file that was distributed with this source code.
 */
 
-import * as WhitespaceRegex from 'whitespace-regex'
-import { Prop, Position, Statement } from '../Contracts'
-
-const whitespaceRegex = WhitespaceRegex()
+import { Prop, Statement, WhiteSpaceModes } from '../Contracts'
+import CharBucket = require('../CharBucket')
 
 const OPENING_BRACE = 40
 const CLOSING_BRACE = 41
@@ -26,25 +24,25 @@ class TagStatement implements Statement {
 
   private currentProp: string
   private internalParens: number
-  private firstTimeCalled: boolean
+  private internalProps: null | { name: CharBucket, jsArg: CharBucket }
 
-  constructor (private startPosition: number, private seekable:boolean = true) {
+  constructor (public startPosition: number, private seekable:boolean = true) {
     this.started = false
     this.ended = false
 
     this.props = {
       name: '',
       jsArg: '',
-      raw: '',
-      position: {
-        start: this.startPosition,
-        end: this.startPosition - 1
-      }
+      raw: ''
+    }
+
+    this.internalProps = {
+      name: new CharBucket(WhiteSpaceModes.NONE),
+      jsArg: new CharBucket(WhiteSpaceModes.CONTROLLED)
     }
 
     this.currentProp = 'name'
     this.internalParens = 0
-    this.firstTimeCalled = false
   }
 
   /**
@@ -55,18 +53,7 @@ class TagStatement implements Statement {
    * @returns boolean
    */
   get seeking (): boolean {
-    return !(this.started && this.ended)
-  }
-
-  /**
-   * Tells whether character is a whitespace or not
-   *
-   * @param  {string} char
-   *
-   * @returns boolean
-   */
-  private isWhiteSpace (char: string): boolean {
-    return whitespaceRegex.test(char)
+    return this.started && !this.ended
   }
 
   /**
@@ -100,6 +87,7 @@ class TagStatement implements Statement {
    * @returns void
    */
   private startStatement (): void {
+    this.setProp()
     this.currentProp = 'jsArg'
     this.started = true
   }
@@ -116,6 +104,8 @@ class TagStatement implements Statement {
       throw new Error(`Unexpected token ${char}. Wrap statement inside ()`)
     }
     this.ended = true
+    this.setProp()
+    this.internalProps = null
   }
 
   /**
@@ -128,10 +118,6 @@ class TagStatement implements Statement {
    * @returns void
    */
   private feedChar (char: string, charCode: number): void {
-    if (this.isWhiteSpace(char)) {
-      return
-    }
-
     if (charCode === OPENING_BRACE) {
       this.internalParens++
     }
@@ -140,7 +126,7 @@ class TagStatement implements Statement {
       this.internalParens--
     }
 
-    this.props[this.currentProp] += char
+    this.internalProps[this.currentProp].feed(char)
   }
 
   /**
@@ -155,6 +141,75 @@ class TagStatement implements Statement {
   private ensureNoMoreCharsToFeed (chars: Array<string>): void {
     if (chars.length) {
       throw new Error(`Unexpected token {${chars.join('')}}. Write in a new line`)
+    }
+  }
+
+  /**
+   * Sets the prop value for the current Prop and set the
+   * corresponding ChatBucket to null.
+   *
+   * @returns void
+   */
+  private setProp (): void {
+    this.props[this.currentProp] = this.internalProps[this.currentProp].get()
+  }
+
+  /**
+   * Records the line as raw string
+   *
+   * @param  {string} line
+   *
+   * @returns void
+   */
+  private recordRaw (line: string): void {
+    if (!this.props.raw) {
+      this.props.raw += line
+    } else {
+      this.props.raw += `\n${line}`
+    }
+  }
+
+  /**
+   * Feeds a non-seekable statement
+   *
+   * @param  {string} line
+   *
+   * @returns void
+   */
+  private feedNonSeekable (line: string): void {
+    this.props.name = line.trim()
+    this.ended = true
+    this.started = true
+    this.internalProps = null
+  }
+
+  /**
+   * Feeds a seekable statement
+   *
+   * @param  {string} line
+   *
+   * @returns void
+   */
+  private feedSeekable (line: string): void {
+    const chars = line.split('')
+
+    while (chars.length) {
+      const char: string = chars.shift()
+      const charCode = char.charCodeAt(0)
+
+      if (this.isStartOfStatement(charCode)) {
+        this.startStatement()
+      } else if (this.isEndOfStatement(charCode)) {
+        this.ensureNoMoreCharsToFeed(chars)
+        this.endStatement(char)
+        break
+      } else {
+        this.feedChar(char, charCode)
+      }
+    }
+
+    if (!this.seeking) {
+      this.internalProps = null
     }
   }
 
@@ -181,46 +236,24 @@ class TagStatement implements Statement {
       throw new Error(`Unexpected token {${line}}. Write in a new line`)
     }
 
-    this.props.position.end++
+    /**
+     * Recording the raw line for debugging
+     */
+    this.recordRaw(line)
+
+    /**
+     * If statement doesn't seek for args, then end it
+     * write their
+     */
     if (!this.seekable) {
-      this.props.name = line.trim()
-      this.props.raw = line
-      this.ended = true
-      this.started = true
+      this.feedNonSeekable(line)
       return
     }
 
     /**
-     * We append new line to the raw string when
-     * feed method is called more than one
-     * time.
+     * Feed a seekable string by tokenizing it
      */
-    if (this.firstTimeCalled) {
-      this.props.raw += '\n'
-    } else {
-      this.firstTimeCalled = true
-    }
-
-    const chars = line.split('')
-    while (chars.length) {
-      const char: string = chars.shift()
-      const charCode = char.charCodeAt(0)
-
-      /**
-       * Maintain a proper raw string for debugging.
-       */
-      this.props.raw += char
-
-      if (this.isStartOfStatement(charCode)) {
-        this.startStatement()
-      } else if (this.isEndOfStatement(charCode)) {
-        this.ensureNoMoreCharsToFeed(chars)
-        this.endStatement(char)
-        break
-      } else {
-        this.feedChar(char, charCode)
-      }
-    }
+    this.feedSeekable(line)
   }
 }
 

@@ -2,6 +2,16 @@
 /**
  * @module Lexer
 */
+/**
+* edge-lexer
+*
+* (c) Harminder Virk <virk@adonisjs.com>
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
+const Contracts_1 = require("../Contracts");
+const CharBucket = require("../CharBucket");
 const OPENING_BRACE = 123;
 const CLOSING_BRACE = 125;
 class MustacheStatement {
@@ -12,13 +22,14 @@ class MustacheStatement {
         this.props = {
             name: '',
             jsArg: '',
-            jsArgOffset: 0,
+            raw: '',
             textLeft: '',
-            textRight: '',
-            position: {
-                start: this.startPosition,
-                end: this.startPosition - 1
-            }
+            textRight: ''
+        };
+        this.internalProps = {
+            jsArg: new CharBucket(Contracts_1.WhiteSpaceModes.CONTROLLED),
+            textLeft: new CharBucket(Contracts_1.WhiteSpaceModes.ALL),
+            textRight: new CharBucket(Contracts_1.WhiteSpaceModes.ALL)
         };
         this.internalBraces = 0;
         this.currentProp = 'textLeft';
@@ -48,6 +59,7 @@ class MustacheStatement {
             return null;
         }
         chars.shift();
+        this.props.raw += '{{';
         if (!chars.length) {
             return 'mustache';
         }
@@ -61,6 +73,7 @@ class MustacheStatement {
             return 'mustache';
         }
         chars.shift();
+        this.props.raw += '{';
         return 'emustache';
     }
     /**
@@ -86,6 +99,7 @@ class MustacheStatement {
             if (next === CLOSING_BRACE && nextToNext === CLOSING_BRACE) {
                 chars.shift();
                 chars.shift();
+                this.props.raw += '}}';
                 return true;
             }
             return false;
@@ -98,6 +112,7 @@ class MustacheStatement {
             const next = chars[0].charCodeAt(0);
             if (next === CLOSING_BRACE) {
                 chars.shift();
+                this.props.raw += '}';
                 return true;
             }
             return false;
@@ -126,30 +141,55 @@ class MustacheStatement {
         let name = null;
         const charCode = char.charCodeAt(0);
         /**
+         * Store raw statement
+         */
+        if (this.currentProp === 'jsArg') {
+            this.props.raw += char;
+        }
+        /**
          * Only process name, when are not in inside mustache
          * statement.
          */
         if (!this.started) {
             name = this.getName(chars, charCode);
         }
+        /**
+         * When a name is found, we consider it as a start
+         * of `mustache` statement
+         */
         if (name) {
             this.props.name = name;
             this.started = true;
+            this.setProp();
             this.currentProp = 'jsArg';
+            return;
         }
-        else if (this.started && !this.ended && this.isClosing(chars, charCode)) {
+        /**
+         * If statement was started and not ended and is a closing
+         * tag, then close mustache
+         */
+        if (this.started && !this.ended && this.isClosing(chars, charCode)) {
+            this.setProp();
             this.currentProp = 'textRight';
             this.ended = true;
+            return;
         }
-        else {
-            if (charCode === OPENING_BRACE) {
-                this.internalBraces++;
-            }
-            if (charCode === CLOSING_BRACE) {
-                this.internalBraces--;
-            }
-            this.props[this.currentProp] += char;
+        if (charCode === OPENING_BRACE) {
+            this.internalBraces++;
         }
+        if (charCode === CLOSING_BRACE) {
+            this.internalBraces--;
+        }
+        this.internalProps[this.currentProp].feed(char);
+    }
+    /**
+     * Sets the value from internal prop to the public prop
+     * as a string
+     *
+     * @returns void
+     */
+    setProp() {
+        this.props[this.currentProp] = this.internalProps[this.currentProp].get();
     }
     /**
      * Feed a new line to be parsed as mustache. For performance it is recommended
@@ -163,11 +203,15 @@ class MustacheStatement {
         if (this.ended) {
             throw new Error(`Unexpected token {${line}}`);
         }
+        this.props.raw = this.props.raw ? `${this.props.raw}\n` : this.props.raw;
         const chars = line.split('');
-        this.props.position.end++;
         while (chars.length) {
             const char = chars.shift();
             this.processChar(chars, char);
+        }
+        if (!this.seeking) {
+            this.setProp();
+            this.internalProps = null;
         }
     }
 }

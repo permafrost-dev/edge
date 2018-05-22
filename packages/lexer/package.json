@@ -8,7 +8,11 @@
     "test": "japa",
     "build": "tsc && typedoc --out docs"
   },
-  "keywords": ["edge", "template", "template-engine"],
+  "keywords": [
+    "edge",
+    "template",
+    "template-engine"
+  ],
   "author": "virk",
   "license": "MIT",
   "devDependencies": {
@@ -22,6 +26,6 @@
   },
   "dependencies": {
     "collapse-white-space": "^1.0.4",
-    "whitespace-regex": "^0.1.2"
+    "is-whitespace-character": "^1.0.2"
   }
 }

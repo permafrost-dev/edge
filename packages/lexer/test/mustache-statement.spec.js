@@ -20,13 +20,13 @@ test.group('Mustache Statement', () => {
 
     assert.isTrue(statement.started)
     assert.isTrue(statement.ended)
+    assert.isNull(statement['internalProps'])
     assert.deepEqual(statement.props, {
       name: 'mustache',
       textLeft: '',
       textRight: '',
       jsArg: ' 2 + 2 ',
-      position: { start: 1, end: 1 },
-      jsArgOffset: 0
+      raw: '{{ 2 + 2 }}'
     })
   })
 
@@ -36,13 +36,13 @@ test.group('Mustache Statement', () => {
 
     assert.isTrue(statement.started)
     assert.isTrue(statement.ended)
+    assert.isNull(statement['internalProps'])
     assert.deepEqual(statement.props, {
       name: 'mustache',
       textLeft: 'The value is ',
       textRight: '',
       jsArg: ' 2 + 2 ',
-      position: { start: 1, end: 1 },
-      jsArgOffset: 0
+      raw: '{{ 2 + 2 }}'
     })
   })
 
@@ -52,13 +52,13 @@ test.group('Mustache Statement', () => {
 
     assert.isTrue(statement.started)
     assert.isTrue(statement.ended)
+    assert.isNull(statement['internalProps'])
     assert.deepEqual(statement.props, {
       name: 'mustache',
       textLeft: 'The value is ',
       textRight: '. This is called addition',
-      jsArg: ' 2 + 2 ',
-      position: { start: 1, end: 1 },
-      jsArgOffset: 0
+      jsArg:  ' 2 + 2 ',
+      raw: '{{ 2 + 2 }}'
     })
   })
 
@@ -76,13 +76,17 @@ test.group('Mustache Statement', () => {
 
     assert.isTrue(statement.started)
     assert.isTrue(statement.ended)
+    assert.isNull(statement['internalProps'])
     assert.deepEqual(statement.props, {
       name: 'mustache',
       textLeft: 'The users are ',
       textRight: '',
-      jsArg: '  users.map((user) => {    return user.username  }).join(\',\')',
-      position: { start: 1, end: 5 },
-      jsArgOffset: 0
+      jsArg: ' users.map((user) => { return user.username }).join(\',\')',
+      raw: dedent`{{
+        users.map((user) => {
+          return user.username
+        }).join(',')
+      }}`
     })
   })
 
@@ -100,13 +104,17 @@ test.group('Mustache Statement', () => {
 
     assert.isTrue(statement.started)
     assert.isTrue(statement.ended)
+    assert.isNull(statement['internalProps'])
     assert.deepEqual(statement.props, {
       name: 'mustache',
       textLeft: 'The users are ',
       textRight: '}',
-      jsArg: '  users.map((user) => {    return user.username  }).join(\',\')',
-      position: { start: 1, end: 5 },
-      jsArgOffset: 0
+      jsArg: ' users.map((user) => { return user.username }).join(\',\')',
+      raw: dedent`{{
+        users.map((user) => {
+          return user.username
+        }).join(',')
+      }}`
     })
   })
 
@@ -116,13 +124,13 @@ test.group('Mustache Statement', () => {
 
     assert.isTrue(statement.started)
     assert.isTrue(statement.ended)
+    assert.isNull(statement['internalProps'])
     assert.deepEqual(statement.props, {
       name: 'emustache',
       textLeft: 'Welcome ',
       textRight: '',
       jsArg: ' \'<span> user </span>\' ',
-      position: { start: 1, end: 1 },
-      jsArgOffset: 0
+      raw: '{{{ \'<span> user </span>\' }}}'
     })
   })
 
@@ -132,13 +140,13 @@ test.group('Mustache Statement', () => {
 
     assert.isFalse(statement.started)
     assert.isFalse(statement.ended)
+    assert.isNull(statement['internalProps'])
     assert.deepEqual(statement.props, {
       name: '',
       textLeft: 'Welcome dude }}}',
       textRight: '',
       jsArg: '',
-      position: { start: 1, end: 1 },
-      jsArgOffset: 0
+      raw: ''
     })
   })
 
@@ -149,14 +157,14 @@ test.group('Mustache Statement', () => {
     assert.isTrue(statement.started)
     assert.isTrue(statement.ended)
     assert.isFalse(statement.seeking)
+    assert.isNull(statement['internalProps'])
 
     assert.deepEqual(statement.props, {
       name: 'mustache',
       textLeft: 'Welcome ',
       textRight: '',
       jsArg: ' {{ username }} ',
-      position: { start: 1, end: 1 },
-      jsArgOffset: 0
+      raw: '{{ {{ username }} }}'
     })
   })
 
@@ -167,14 +175,14 @@ test.group('Mustache Statement', () => {
     assert.isTrue(statement.started)
     assert.isFalse(statement.ended)
     assert.isTrue(statement.seeking)
+    assert.isNotNull(statement['internalProps'])
 
     assert.deepEqual(statement.props, {
       name: 'emustache',
       textLeft: 'Welcome ',
       textRight: '',
-      jsArg: ' username }}',
-      position: { start: 1, end: 1 },
-      jsArgOffset: 0
+      jsArg: '',
+      raw: '{{{ username }}'
     })
   })
 })

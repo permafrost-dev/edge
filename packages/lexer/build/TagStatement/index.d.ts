@@ -1,13 +1,24 @@
+/**
+ * @module Lexer
+*/
+/**
+* edge-lexer
+*
+* (c) Harminder Virk <virk@adonisjs.com>
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
 import { Prop, Statement } from '../Contracts';
 declare class TagStatement implements Statement {
-    private startPosition;
+    startPosition: number;
     private seekable;
     started: boolean;
     ended: boolean;
     props: Prop;
     private currentProp;
     private internalParens;
-    private firstTimeCalled;
+    private internalProps;
     constructor(startPosition: number, seekable?: boolean);
     /**
      * Tells whether statement is seeking for more content
@@ -17,14 +28,6 @@ declare class TagStatement implements Statement {
      * @returns boolean
      */
     readonly seeking: boolean;
-    /**
-     * Tells whether character is a whitespace or not
-     *
-     * @param  {string} char
-     *
-     * @returns boolean
-     */
-    private isWhiteSpace(char);
     /**
      * Returns a boolean telling if charcode should be considered
      * as the start of the statement.
@@ -78,6 +81,37 @@ declare class TagStatement implements Statement {
      * @returns void
      */
     private ensureNoMoreCharsToFeed(chars);
+    /**
+     * Sets the prop value for the current Prop and set the
+     * corresponding ChatBucket to null.
+     *
+     * @returns void
+     */
+    private setProp();
+    /**
+     * Records the line as raw string
+     *
+     * @param  {string} line
+     *
+     * @returns void
+     */
+    private recordRaw(line);
+    /**
+     * Feeds a non-seekable statement
+     *
+     * @param  {string} line
+     *
+     * @returns void
+     */
+    private feedNonSeekable(line);
+    /**
+     * Feeds a seekable statement
+     *
+     * @param  {string} line
+     *
+     * @returns void
+     */
+    private feedSeekable(line);
     /**
      * Feed a new line to be tokenized into a statement.
      * This method will collapse all whitespaces.

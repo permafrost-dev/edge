@@ -21,12 +21,12 @@ test.group('Statement', () => {
     assert.equal(statement.ended, true)
     assert.equal(statement.started, true)
     assert.equal(statement.seeking, false)
+    assert.isNull(statement['internalProps'])
 
     assert.deepEqual(statement.props, {
       name: 'if',
       jsArg: 'username',
-      raw: 'if(username)',
-      position: { start: 1, end: 1 }
+      raw: 'if(username)'
     })
   })
 
@@ -36,12 +36,12 @@ test.group('Statement', () => {
 
     assert.equal(statement.ended, true)
     assert.equal(statement.started, true)
+    assert.isNull(statement['internalProps'])
 
     assert.deepEqual(statement.props, {
       name: 'if',
-      jsArg: '(2+2)',
-      raw: 'if((2 + 2))',
-      position: { start: 1, end: 1 }
+      jsArg: '(2 + 2)',
+      raw: 'if((2 + 2))'
     })
   })
 
@@ -60,8 +60,7 @@ test.group('Statement', () => {
 
   test('parse statement into tokens when feeded in multiple lines', (assert) => {
     const statement = new TagStatement(1)
-    const template = `
-    if (
+    const template = `if (
       2 + 2 === 4
     )`
 
@@ -73,12 +72,12 @@ test.group('Statement', () => {
 
     assert.equal(statement.ended, true)
     assert.equal(statement.started, true)
+    assert.isNull(statement['internalProps'])
 
     assert.deepEqual(statement.props, {
       name: 'if',
-      jsArg: '2+2===4',
-      raw: template,
-      position: { start: 1, end: 4 }
+      jsArg: ' 2 + 2 === 4 ',
+      raw: template
     })
   })
 
@@ -88,13 +87,13 @@ test.group('Statement', () => {
 
     assert.equal(statement.ended, false)
     assert.equal(statement.started, false)
-    assert.equal(statement.seeking, true)
+    assert.equal(statement.seeking, false)
+    assert.isNull(statement['internalProps'])
 
     assert.deepEqual(statement.props, {
-      name: 'if',
+      name: '',
       jsArg: '',
-      raw: 'if',
-      position: { start: 1, end: 1 }
+      raw: 'if'
     })
   })
 
@@ -105,12 +104,12 @@ test.group('Statement', () => {
     assert.equal(statement.ended, false)
     assert.equal(statement.seeking, true)
     assert.equal(statement.started, true)
+    assert.isNotNull(statement['internalProps'])
 
     assert.deepEqual(statement.props, {
       name: 'if',
       jsArg: '',
-      raw: 'if(',
-      position: { start: 1, end: 1 }
+      raw: 'if('
     })
   })
 
@@ -126,12 +125,12 @@ test.group('Statement', () => {
 
     assert.equal(statement.ended, true)
     assert.equal(statement.started, true)
+    assert.isNull(statement['internalProps'])
 
     assert.deepEqual(statement.props, {
       name: 'else',
       jsArg: '',
-      raw: 'else',
-      position: { start: 1, end: 1 }
+      raw: 'else'
     })
   })
 
@@ -141,12 +140,35 @@ test.group('Statement', () => {
 
     assert.equal(statement.ended, true)
     assert.equal(statement.started, true)
+    assert.isNull(statement['internalProps'])
 
     assert.deepEqual(statement.props, {
       name: 'else',
       jsArg: '',
-      raw: '  else  ',
-      position: { start: 1, end: 1 }
+      raw: '  else  '
+    })
+  })
+
+  test('limit whitespaces to one in jsArg', (assert) => {
+    const statement = new TagStatement(1)
+    const template = `if(
+      users.find((user) => {
+        return user.username === 'virk'
+      })
+    )`
+
+    template
+      .split('\n')
+      .forEach((line) => statement.feed(line))
+
+    assert.equal(statement.ended, true)
+    assert.equal(statement.started, true)
+    assert.isNull(statement['internalProps'])
+
+    assert.deepEqual(statement.props, {
+      name: 'if',
+      jsArg: ' users.find((user) => { return user.username === \'virk\' }) ',
+      raw: template
     })
   })
 })

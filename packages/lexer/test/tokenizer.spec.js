@@ -40,29 +40,45 @@ test.group('Tokenizer', () => {
     const tokenizer = new Tokenizer(template, tagsDef)
     tokenizer.parse()
 
+    assert.isNull(tokenizer['blockStatement'])
+    assert.isNull(tokenizer['mustacheStatement'])
     assert.deepEqual(tokenizer['tokens'], [
       {
         type: 'raw',
         value: 'Hello',
-        position: { start: 1, end: 1 },
-        children: []
+        lineno: 1
+      },
+      {
+        type: 'newline',
+        lineno: 1
       },
       {
         type: 'raw',
         value: '',
-        position: { start: 2, end: 2 },
-        children: []
+        lineno: 2
       },
       {
-        type: 'tag',
+        type: 'newline',
+        lineno: 2
+      },
+      {
+        type: 'block',
         properties: {
           name: 'if',
           jsArg: 'username',
-          jsArgOffset: 3,
-          position: { start: 3, end: 3 }
+          raw: 'if(username)'
         },
-        position: { start: 3, end: 4 },
-        children: []
+        lineno: 3,
+        children: [
+          {
+            type: 'newline',
+            lineno: 3
+          }
+        ]
+      },
+      {
+        type: 'newline',
+        lineno: 4
       }
     ])
   })
@@ -72,43 +88,61 @@ test.group('Tokenizer', () => {
     Hello
 
     @if(username)
-      Hello {{ username }}
+      Hello
     @endif
     `
 
     const tokenizer = new Tokenizer(template, tagsDef)
     tokenizer.parse()
 
+    assert.isNull(tokenizer['blockStatement'])
+    assert.isNull(tokenizer['mustacheStatement'])
     assert.deepEqual(tokenizer['tokens'], [
       {
         type: 'raw',
         value: 'Hello',
-        position: { start: 1, end: 1 },
-        children: []
+        lineno: 1
+      },
+      {
+        type: 'newline',
+        lineno: 1
       },
       {
         type: 'raw',
         value: '',
-        position: { start: 2, end: 2 },
-        children: []
+        lineno: 2
       },
       {
-        type: 'tag',
+        type: 'newline',
+        lineno: 2
+      },
+      {
+        type: 'block',
+        lineno: 3,
         properties: {
           name: 'if',
           jsArg: 'username',
-          jsArgOffset: 3,
-          position: { start: 3, end: 3 }
+          raw: 'if(username)'
         },
-        position: { start: 3, end: 5 },
         children: [
           {
+            type: 'newline',
+            lineno: 3
+          },
+          {
             type: 'raw',
-            value: '  Hello {{ username }}',
-            position: { start: 4, end: 4 },
-            children: []
+            value: '  Hello',
+            lineno: 4
+          },
+          {
+            type: 'newline',
+            lineno: 4
           }
         ]
+      },
+      {
+        type: 'newline',
+        lineno: 5
       }
     ])
   })
@@ -119,7 +153,7 @@ test.group('Tokenizer', () => {
 
     @if(username)
       @if(username === 'virk')
-        Hi {{ username }}
+        Hi
       @endif
     @endif
     `
@@ -127,48 +161,73 @@ test.group('Tokenizer', () => {
     const tokenizer = new Tokenizer(template, tagsDef)
     tokenizer.parse()
 
+    assert.isNull(tokenizer['blockStatement'])
+    assert.isNull(tokenizer['mustacheStatement'])
     assert.deepEqual(tokenizer['tokens'], [
       {
         type: 'raw',
         value: 'Hello',
-        position: { start: 1, end: 1 },
-        children: []
+        lineno: 1
+      },
+      {
+        type: 'newline',
+        lineno: 1
       },
       {
         type: 'raw',
         value: '',
-        position: { start: 2, end: 2 },
-        children: []
+        lineno: 2
       },
       {
-        type: 'tag',
+        type: 'newline',
+        lineno: 2
+      },
+      {
+        type: 'block',
+        lineno: 3,
         properties: {
           name: 'if',
           jsArg: 'username',
-          jsArgOffset: 3,
-          position: { start: 3, end: 3 }
+          raw: 'if(username)'
         },
-        position: { start: 3, end: 7 },
         children: [
           {
-            type: 'tag',
+            type: 'newline',
+            lineno: 3
+          },
+          {
+            type: 'block',
+            lineno: 4,
             properties: {
               name: 'if',
               jsArg: 'username === \'virk\'',
-              jsArgOffset: 5,
-              position: { start: 4, end: 4 },
+              raw: 'if(username === \'virk\')'
             },
-            position: { start: 4, end: 6 },
             children: [
               {
+                type: 'newline',
+                lineno: 4
+              },
+              {
                 type: 'raw',
-                value: '    Hi {{ username }}',
-                position: { start: 5, end: 5 },
-                children: []
+                value: '    Hi',
+                lineno: 5
+              },
+              {
+                type: 'newline',
+                lineno: 5
               }
             ]
+          },
+          {
+            type: 'newline',
+            lineno: 6
           }
         ]
+      },
+      {
+        type: 'newline',
+        lineno: 7
       }
     ])
   })
@@ -180,43 +239,61 @@ test.group('Tokenizer', () => {
     @if(
       username
     )
-      Hello {{ username }}
+      Hello
     @endif
     `
 
     const tokenizer = new Tokenizer(template, tagsDef)
     tokenizer.parse()
 
+    assert.isNull(tokenizer['blockStatement'])
+    assert.isNull(tokenizer['mustacheStatement'])
     assert.deepEqual(tokenizer['tokens'], [
       {
         type: 'raw',
         value: 'Hello',
-        position: { start: 1, end: 1 },
-        children: []
+        lineno: 1
+      },
+      {
+        type: 'newline',
+        lineno: 1
       },
       {
         type: 'raw',
         value: '',
-        position: { start: 2, end: 2 },
-        children: []
+        lineno: 2
       },
       {
-        type: 'tag',
+        type: 'newline',
+        lineno: 2
+      },
+      {
+        type: 'block',
+        lineno: 3,
         properties: {
           name: 'if',
-          jsArg: '  username',
-          jsArgOffset: 3,
-          position: { start: 3, end: 5 }
+          jsArg: ' username',
+          raw: 'if(\n  username\n)'
         },
-        position: { start: 3, end: 7 },
         children: [
           {
+            type: 'newline',
+            lineno: 5
+          },
+          {
             type: 'raw',
-            value: '  Hello {{ username }}',
-            position: { start: 6, end: 6 },
-            children: []
+            value: '  Hello',
+            lineno: 6
+          },
+          {
+            type: 'newline',
+            lineno: 6
           }
         ]
+      },
+      {
+        type: 'newline',
+        lineno: 7
       }
     ])
   })
@@ -235,59 +312,80 @@ test.group('Tokenizer', () => {
     const tokenizer = new Tokenizer(template, tagsDef)
     tokenizer.parse()
 
+    assert.isNull(tokenizer['blockStatement'])
+    assert.isNull(tokenizer['mustacheStatement'])
     assert.deepEqual(tokenizer['tokens'], [
       {
         type: 'raw',
         value: 'Hello',
-        position: { start: 1, end: 1 },
-        children: []
+        lineno: 1
+      },
+      {
+        type: 'newline',
+        lineno: 1
       },
       {
         type: 'raw',
         value: '',
-        position: { start: 2, end: 2 },
-        children: []
+        lineno: 2
       },
       {
-        type: 'tag',
+        type: 'newline',
+        lineno: 2
+      },
+      {
+        type: 'block',
+        lineno: 3,
         properties: {
           name: 'if',
-          jsArg: '(  2 + 2) * 3 === 12',
-          jsArgOffset: 3,
-          position: { start: 3, end: 5 }
+          jsArg: '( 2 + 2) * 3 === 12',
+          raw: 'if((\n  2 + 2) * 3 === 12\n)'
         },
-        position: { start: 3, end: 7 },
         children: [
+          {
+            type: 'newline',
+            lineno: 5
+          },
           {
             type: 'raw',
             value: '  Answer is 12',
-            position: { start: 6, end: 6 },
-            children: []
+            lineno: 6
+          },
+          {
+            type: 'newline',
+            lineno: 6
           }
         ]
+      },
+      {
+        type: 'newline',
+        lineno: 7
       }
     ])
   })
 
   test('parse inline tags', (assert) => {
-    const template = dedent`
-    @include('partials.user')
-    `
+    const template = dedent`@include('partials.user')`
 
     const tokenizer = new Tokenizer(template, tagsDef)
     tokenizer.parse()
 
+    assert.isNull(tokenizer['blockStatement'])
+    assert.isNull(tokenizer['mustacheStatement'])
     assert.deepEqual(tokenizer['tokens'], [
       {
-        type: 'tag',
+        type: 'block',
+        lineno: 1,
         properties: {
           name: 'include',
           jsArg: '\'partials.user\'',
-          jsArgOffset: 8,
-          position: { start: 1, end: 1 }
+          raw: 'include(\'partials.user\')'
         },
-        position: { start: 1, end: 1 },
         children: []
+      },
+      {
+        type: 'newline',
+        lineno: 1
       }
     ])
   })
@@ -295,7 +393,7 @@ test.group('Tokenizer', () => {
   test('parse inline tags which are not seekable', (assert) => {
     const template = dedent`
     @if(username)
-      Hello {{ username }}
+      Hello
     @else
       Hello guest
     @endif
@@ -304,41 +402,59 @@ test.group('Tokenizer', () => {
     const tokenizer = new Tokenizer(template, tagsDef)
     tokenizer.parse()
 
+    assert.isNull(tokenizer['blockStatement'])
+    assert.isNull(tokenizer['mustacheStatement'])
     assert.deepEqual(tokenizer['tokens'], [
       {
-        type: 'tag',
+        type: 'block',
+        lineno: 1,
         properties: {
           name: 'if',
           jsArg: 'username',
-          jsArgOffset: 3,
-          position: { start: 1, end: 1 }
+          raw: 'if(username)'
         },
-        position: { start: 1, end: 5 },
         children: [
           {
-            type: 'raw',
-            value: '  Hello {{ username }}',
-            position: { start: 2, end: 2 },
-            children: []
+            type: 'newline',
+            lineno: 1
           },
           {
-            type: 'tag',
+            type: 'raw',
+            value: '  Hello',
+            lineno: 2
+          },
+          {
+            type: 'newline',
+            lineno: 2
+          },
+          {
+            type: 'block',
+            lineno: 3,
             properties: {
               name: 'else',
               jsArg: '',
-              jsArgOffset: 4,
-              position: { start: 3, end: 3 }
+              raw: 'else'
             },
-            position: { start: 3, end: 3 },
             children: []
+          },
+          {
+            type: 'newline',
+            lineno: 3
           },
           {
             type: 'raw',
             value: '  Hello guest',
-            position: { start: 4, end: 4 },
-            children: []
+            lineno: 4
+          },
+          {
+            type: 'newline',
+            lineno: 4
           }
         ]
+      },
+      {
+        type: 'newline',
+        lineno: 5
       }
     ])
   })
@@ -351,12 +467,17 @@ test.group('Tokenizer', () => {
     const tokenizer = new Tokenizer(template, tagsDef)
     tokenizer.parse()
 
+    assert.isNull(tokenizer['blockStatement'])
+    assert.isNull(tokenizer['mustacheStatement'])
     assert.deepEqual(tokenizer['tokens'], [
       {
         type: 'raw',
         value: '@foo(\'hello world\')',
-        position: { start: 1, end: 1 },
-        children: []
+        lineno: 1
+      },
+      {
+        type: 'newline',
+        lineno: 1
       }
     ])
   })
@@ -370,18 +491,407 @@ test.group('Tokenizer', () => {
     const tokenizer = new Tokenizer(template, tagsDef)
     tokenizer.parse()
 
+    assert.isNull(tokenizer['blockStatement'])
+    assert.isNull(tokenizer['mustacheStatement'])
     assert.deepEqual(tokenizer['tokens'], [
       {
         type: 'raw',
         value: '@if(username)',
-        position: { start: 1, end: 1 },
-        children: []
+        lineno: 1
+      },
+      {
+        type: 'newline',
+        lineno: 1
       },
       {
         type: 'raw',
         value: '@endif',
-        position: { start: 2, end: 2 },
+        lineno: 2
+      },
+      {
+        type: 'newline',
+        lineno: 2
+      }
+    ])
+  })
+
+  test('convert tag to raw string when statement is still seeking', (assert) => {
+    const template = dedent`@if((2 + 2)
+    @endif`
+
+    const tokenizer = new Tokenizer(template, tagsDef)
+    tokenizer.parse()
+
+    assert.isNull(tokenizer['blockStatement'])
+    assert.isNull(tokenizer['mustacheStatement'])
+    assert.deepEqual(tokenizer['tokens'], [
+      {
+        type: 'raw',
+        value: '@if((2 + 2)\n@endif',
+        lineno: 2
+      },
+      {
+        type: 'newline',
+        lineno: 2
+      }
+    ])
+  })
+
+  test('consume one liner inline tag', (assert) => {
+    const template = `@include('header')`
+
+    const tokenizer = new Tokenizer(template, tagsDef)
+    tokenizer.parse()
+
+    assert.isNull(tokenizer['blockStatement'])
+    assert.isNull(tokenizer['mustacheStatement'])
+    assert.deepEqual(tokenizer['tokens'], [
+      {
+        type: 'block',
+        lineno: 1,
+        properties: {
+          name: 'include',
+          raw: template.replace('@', ''),
+          jsArg: '\'header\''
+        },
         children: []
+      },
+      {
+        type: 'newline',
+        lineno: 1
+      }
+    ])
+  })
+
+  test('process mustache blocks', (assert) => {
+    const template = 'Hello {{ username }}'
+
+    const tokenizer = new Tokenizer(template, tagsDef)
+    tokenizer.parse()
+
+    assert.isNull(tokenizer['blockStatement'])
+    assert.isNull(tokenizer['mustacheStatement'])
+    assert.deepEqual(tokenizer['tokens'], [
+      {
+        type: 'raw',
+        lineno: 1,
+        value: 'Hello '
+      },
+      {
+        type: 'mustache',
+        lineno: 1,
+        properties: {
+          name: 'mustache',
+          jsArg: ' username ',
+          raw: '{{ username }}'
+        }
+      },
+      {
+        type: 'newline',
+        lineno: 1
+      }
+    ])
+  })
+
+  test('process mustache blocks with text around it', (assert) => {
+    const template = 'Hello {{ username }}!'
+
+    const tokenizer = new Tokenizer(template, tagsDef)
+    tokenizer.parse()
+
+    assert.isNull(tokenizer['blockStatement'])
+    assert.isNull(tokenizer['mustacheStatement'])
+    assert.deepEqual(tokenizer['tokens'], [
+      {
+        type: 'raw',
+        lineno: 1,
+        value: 'Hello '
+      },
+      {
+        type: 'mustache',
+        lineno: 1,
+        properties: {
+          name: 'mustache',
+          jsArg: ' username ',
+          raw: '{{ username }}'
+        }
+      },
+      {
+        type: 'raw',
+        lineno: 1,
+        value: '!'
+      },
+      {
+        type: 'newline',
+        lineno: 1
+      }
+    ])
+  })
+
+  test('parse multiline mustache', (assert) => {
+    const template = dedent`List of users are {{
+      users.map((user) => {
+        return user.username
+      }).join(', ')
+    }}.`
+
+    const tokenizer = new Tokenizer(template, tagsDef)
+    tokenizer.parse()
+
+    assert.isNull(tokenizer['blockStatement'])
+    assert.isNull(tokenizer['mustacheStatement'])
+    assert.deepEqual(tokenizer['tokens'], [
+      {
+        type: 'raw',
+        lineno: 1,
+        value: 'List of users are '
+      },
+      {
+        type: 'mustache',
+        lineno: 1,
+        properties: {
+          name: 'mustache',
+          jsArg: ' users.map((user) => { return user.username }).join(\', \')',
+          raw: `{{\n  users.map((user) => {\n    return user.username\n  }).join(', ')\n}}`
+        }
+      },
+      {
+        type: 'raw',
+        lineno: 5,
+        value: '.'
+      },
+      {
+        type: 'newline',
+        lineno: 5
+      }
+    ])
+  })
+
+  test('Allow escaped mustache', (assert) => {
+    const template = dedent`List of users are {{{
+      users.map((user) => {
+        return user.username
+      }).join(', ')
+    }}}.`
+
+    const tokenizer = new Tokenizer(template, tagsDef)
+    tokenizer.parse()
+
+    assert.isNull(tokenizer['blockStatement'])
+    assert.isNull(tokenizer['mustacheStatement'])
+    assert.deepEqual(tokenizer['tokens'], [
+      {
+        type: 'raw',
+        lineno: 1,
+        value: 'List of users are '
+      },
+      {
+        type: 'mustache',
+        lineno: 1,
+        properties: {
+          name: 'emustache',
+          jsArg: ' users.map((user) => { return user.username }).join(\', \')',
+          raw: `{{{\n  users.map((user) => {\n    return user.username\n  }).join(', ')\n}}}`
+        }
+      },
+      {
+        type: 'raw',
+        lineno: 5,
+        value: '.'
+      },
+      {
+        type: 'newline',
+        lineno: 5
+      }
+    ])
+  })
+
+  test('parse multiple mustache statements in a single line', (assert) => {
+    const template = dedent`Hello {{ username }}, your age is {{ age }}`
+
+    const tokenizer = new Tokenizer(template, tagsDef)
+    tokenizer.parse()
+
+    assert.isNull(tokenizer['blockStatement'])
+    assert.isNull(tokenizer['mustacheStatement'])
+
+    assert.deepEqual(tokenizer['tokens'], [
+      {
+        type: 'raw',
+        lineno: 1,
+        value: 'Hello '
+      },
+      {
+        type: 'mustache',
+        lineno: 1,
+        properties: {
+          name: 'mustache',
+          jsArg: ' username ',
+          raw: '{{ username }}'
+        }
+      },
+      {
+        type: 'raw',
+        lineno: 1,
+        value: ', your age is '
+      },
+      {
+        type: 'mustache',
+        lineno: 1,
+        properties: {
+          name: 'mustache',
+          jsArg: ' age ',
+          raw: '{{ age }}'
+        }
+      },
+      {
+        type: 'newline',
+        lineno: 1
+      }
+    ])
+  })
+
+  test('parse multiple mustache statements in multiple lines', (assert) => {
+    const template = dedent`
+    Hello {{ username }}, your friends are {{
+      users.map((user) => {
+        return user.username
+      }).join(', ')
+    }}!
+    Bye
+    `
+
+    const tokenizer = new Tokenizer(template, tagsDef)
+    tokenizer.parse()
+
+    assert.isNull(tokenizer['blockStatement'])
+    assert.isNull(tokenizer['mustacheStatement'])
+
+    assert.deepEqual(tokenizer['tokens'], [
+      {
+        type: 'raw',
+        lineno: 1,
+        value: 'Hello '
+      },
+      {
+        type: 'mustache',
+        lineno: 1,
+        properties: {
+          name: 'mustache',
+          jsArg: ' username ',
+          raw: '{{ username }}'
+        }
+      },
+      {
+        type: 'raw',
+        lineno: 1,
+        value: ', your friends are '
+      },
+      {
+        type: 'mustache',
+        lineno: 1,
+        properties: {
+          name: 'mustache',
+          jsArg: ' users.map((user) => { return user.username }).join(\', \')',
+          raw: dedent`{{
+            users.map((user) => {
+              return user.username
+            }).join(', ')
+          }}`
+        }
+      },
+      {
+        type: 'raw',
+        lineno: 5,
+        value: '!'
+      },
+      {
+        type: 'newline',
+        lineno: 5
+      },
+      {
+        type: 'raw',
+        lineno: 6,
+        value: 'Bye'
+      },
+      {
+        type: 'newline',
+        lineno: 6
+      }
+    ])
+  })
+
+  test('convert incomplete mustache statements to raw string', (assert) => {
+    const template = 'Hello {{ username'
+
+    const tokenizer = new Tokenizer(template, tagsDef)
+    tokenizer.parse()
+
+    assert.isNull(tokenizer['blockStatement'])
+    assert.isNull(tokenizer['mustacheStatement'])
+    assert.deepEqual(tokenizer['tokens'], [
+      {
+        type: 'raw',
+        lineno: 1,
+        value: 'Hello {{ username'
+      },
+      {
+        type: 'newline',
+        lineno: 1
+      }
+    ])
+  })
+
+  test('parse 3 mustache statements in a single line', (assert) => {
+    const template = dedent`{{ username }}, {{ age }} and {{ state }}`
+
+    const tokenizer = new Tokenizer(template, tagsDef)
+    tokenizer.parse()
+
+    assert.isNull(tokenizer['blockStatement'])
+    assert.isNull(tokenizer['mustacheStatement'])
+
+    assert.deepEqual(tokenizer['tokens'], [
+      {
+        type: 'mustache',
+        lineno: 1,
+        properties: {
+          name: 'mustache',
+          jsArg: ' username ',
+          raw: '{{ username }}'
+        }
+      },
+      {
+        type: 'raw',
+        lineno: 1,
+        value: ', '
+      },
+      {
+        type: 'mustache',
+        lineno: 1,
+        properties: {
+          name: 'mustache',
+          jsArg: ' age ',
+          raw: '{{ age }}'
+        }
+      },
+      {
+        type: 'raw',
+        lineno: 1,
+        value: ' and '
+      },
+      {
+        type: 'mustache',
+        lineno: 1,
+        properties: {
+          name: 'mustache',
+          jsArg: ' state ',
+          raw: '{{ state }}'
+        }
+      },
+      {
+        type: 'newline',
+        lineno: 1
       }
     ])
   })

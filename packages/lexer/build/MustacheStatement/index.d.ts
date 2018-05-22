@@ -11,12 +11,13 @@
 */
 import { Statement, MustacheProp } from '../Contracts';
 declare class MustacheStatement implements Statement {
-    private startPosition;
+    startPosition: number;
     started: boolean;
     ended: boolean;
     props: MustacheProp;
     private currentProp;
     private internalBraces;
+    private internalProps;
     constructor(startPosition: number);
     /**
      * Returns the name of the type of the mustache tag. If char and
@@ -57,6 +58,13 @@ declare class MustacheStatement implements Statement {
      * @returns void
      */
     private processChar(chars, char);
+    /**
+     * Sets the value from internal prop to the public prop
+     * as a string
+     *
+     * @returns void
+     */
+    private setProp();
     /**
      * Feed a new line to be parsed as mustache. For performance it is recommended
      * to check that line contains alteast one `{{` statement and is not escaped.

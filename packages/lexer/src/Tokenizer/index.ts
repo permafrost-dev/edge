@@ -12,32 +12,29 @@
 */
 
 import { EOL } from 'os'
-import Statement =  require('../TagStatement')
-import { Prop, Position, Node, NodeType } from '../Contracts'
+import BlockStatement =  require('../TagStatement')
+import MustacheStatement =  require('../MustacheStatement')
+import { Prop, Node, BlockNode, NodeType, MustacheProp, MustacheNode } from '../Contracts'
 
 const TAG_REGEX = /^(\\)?@(?:!)?(\w+)/
+const IGNORED_MUSTACHE_REGEX = /@{{2}/
+const MUSTACHE_REGEX = /{{2}/
+const ESCAPE_REGEX = /^(\s*)\\/
+const TRIM_TAG_REGEX = /^@/
 
 class Tokenizer {
-  private tokens: Node[]
-  private currentStatement: Statement
-  private openedTags: Node[]
+  private tokens: (Node | BlockNode)[]
+  private blockStatement: null | BlockStatement
+  private mustacheStatement: null | MustacheStatement
   private line: number
+  private openedTags: BlockNode[]
 
   constructor (private template: string, private tagsDef: object) {
     this.tokens = []
-    this.currentStatement = null
     this.openedTags = []
+    this.blockStatement = null
+    this.mustacheStatement = null
     this.line = 0
-  }
-
-  /**
-   * Returns the recently opened block tag. It is used
-   * to feed children unless the tag gets closed
-   *
-   * @returns Node
-   */
-  get recentOpenedTag (): Node {
-    return this.openedTags[this.openedTags.length - 1]
   }
 
   /**
@@ -48,7 +45,7 @@ class Tokenizer {
    *
    * @returns object
    */
-  getTag (line: string): null | { block?: boolean, seekable?: boolean, escaped?: boolean } {
+  private getTag (line: string): null | { block?: boolean, seekable?: boolean, escaped?: boolean } {
     const match = TAG_REGEX.exec(line.trim())
     if (!match) {
       return null
@@ -70,17 +67,15 @@ class Tokenizer {
    * Returns the node for a tag
    *
    * @param  {Prop} properties
+   * @param  {number} lineno
    *
    * @returns Node
    */
-  getTagNode (properties: Prop): Node {
+  private getTagNode (properties: Prop, lineno: number): BlockNode {
     return {
-      type: NodeType.TAG,
+      type: NodeType.BLOCK,
       properties,
-      position: {
-        start: properties.position.start,
-        end: this.line
-      },
+      lineno,
       children: []
     }
   }
@@ -92,18 +87,45 @@ class Tokenizer {
    *
    * @returns Node
    */
-  getRawNode (value: string): Node {
+  private getRawNode (value: string): Node {
     return {
       type: NodeType.RAW,
       value,
-      position: {
-        start: this.line,
-        end: this.line
-      },
-      children: []
+      lineno: this.line
     }
   }
 
+  /**
+   * Returns the node for a newline
+   *
+   * @returns Node
+   */
+  private getBlankLineNode (): Node {
+    return {
+      type: NodeType.NEWLINE,
+      lineno: this.line
+    }
+  }
+
+  /**
+   * Returns the mustache node
+   *
+   * @param  {Prop} properties
+   * @param  {number} lineno
+   *
+   * @returns MustacheNode
+   */
+  private getMustacheNode (properties: Prop, lineno: number): MustacheNode {
+    return {
+      type: NodeType.MUSTACHE,
+      lineno,
+      properties: {
+        name: properties.name,
+        jsArg: properties.jsArg,
+        raw: properties.raw
+      }
+    }
+  }
 
   /**
    * Returns a boolean, when line content is a closing
@@ -113,62 +135,37 @@ class Tokenizer {
    *
    * @returns boolean
    */
-  isClosingTag (line: string): boolean {
-    const recentOpenedTag = this.recentOpenedTag
-    return recentOpenedTag && `@end${recentOpenedTag.properties.name}` === line.trim()
-  }
-
-  /**
-   * Returns a boolean, which tells whether the currentStatement is
-   * seeking for more data or not. Since we allow multi line
-   * statements, we need to wait for multiple lines to
-   * processed until a statement gets over.
-   *
-   * @returns boolean
-   */
-  isStatementSeeking (): boolean {
-    return this.currentStatement && this.currentStatement.seeking
-  }
-
-  /**
-   * Returns a boolean, telling that there is an open statement, but
-   * not seeking for any more content.
-   *
-   * @returns boolean
-   */
-  isStatementSeeked (): boolean {
-    return this.currentStatement && !this.currentStatement.seeking
-  }
-
-  /**
-   * Consumes a statement when it's not seeking for more
-   * content. This is basically a start of a tag.
-   *
-   * @returns void
-   */
-  consumeStatement (): void {
-    if (this.tagsDef[this.currentStatement.props.name].block) {
-      this.openedTags.push(this.getTagNode(this.currentStatement.props))
-    } else {
-      this.consumeNode(this.getTagNode(this.currentStatement.props))
+  private isClosingTag (line: string): boolean {
+    if (!this.openedTags.length) {
+      return false
     }
-    this.currentStatement = null
+
+    const recentTag = this.openedTags[this.openedTags.length - 1]
+    return line.trim() === `@end${recentTag.properties.name}`
   }
 
   /**
-   * Here we feed the line to the current statement
-   * and check whether it needs more content or
+   * Returns a boolean, telling if a given statement is seeking
+   * for more content or not
+   *
+   * @param  {BlockStatement|MustacheStatement} statement
+   *
+   * @returns boolean
+   */
+  private isSeeking (statement:  BlockStatement | MustacheStatement): boolean {
+    return statement && statement.seeking
+  }
+
+  /**
+   * Returns a boolean, telling if a given statement has ended or
    * not.
    *
-   * @param  {string} line
+   * @param  {BlockStatement|MustacheStatement} statement
    *
-   * @returns void
+   * @returns boolean
    */
-  feedLineAsStatement (line:string): void {
-    this.currentStatement.feed(line.replace('@', ''))
-    if (this.isStatementSeeked()) {
-      this.consumeStatement()
-    }
+  private isSeeked (statement:  BlockStatement | MustacheStatement): boolean {
+    return statement && !statement.seeking
   }
 
   /**
@@ -179,58 +176,156 @@ class Tokenizer {
    *
    * @returns void
    */
-  consumeNode (tag: Node): void {
-    const recentOpenedTag = this.recentOpenedTag
-    recentOpenedTag ? recentOpenedTag.children.push(tag) : this.tokens.push(tag)
+  private consumeNode (tag: Node | BlockNode): void {
+    if (this.openedTags.length) {
+      this.openedTags[this.openedTags.length - 1].children.push(tag)
+      return
+    }
+    this.tokens.push(tag)
   }
 
   /**
-   * Process one line at time
+   * Feeds the text to the currently opened block statement.
+   * Make sure that `seeking` is true on the block
+   * statement, before calling this method.
    *
-   * @param  {string} line
+   * @param  {string} text
    *
    * @returns void
    */
-  processLine (line: string): void {
-    this.line++
+  private feedTextToBlockStatement (text: string): void {
+    this.blockStatement.feed(text)
+
+    if (!this.isSeeked(this.blockStatement)) {
+      return
+    }
+
+    const { props, startPosition } = this.blockStatement
 
     /**
-     * Line is a statement
+     * If tag is a block level, then we added it to the openedTags
+     * array, otherwise we add it to the tokens.
      */
-    if (this.isStatementSeeking()) {
-      this.feedLineAsStatement(line)
+    if (this.tagsDef[props.name].block) {
+      this.openedTags.push(this.getTagNode(props, startPosition))
+    } else {
+      this.consumeNode(this.getTagNode(props, startPosition))
+    }
+
+    this.consumeNode(this.getBlankLineNode())
+    this.blockStatement = null
+  }
+
+  /**
+   * Feeds text to the currently opened mustache statement. Make sure
+   * to check `seeking` is true, before calling this method.
+   *
+   * @param  {string} text
+   *
+   * @returns void
+   */
+  private feedTextToMustacheStatement (text: string): void {
+    this.mustacheStatement.feed(text)
+    if (!this.isSeeked(this.mustacheStatement)) {
+      return
+    }
+
+    const { props, startPosition } = this.mustacheStatement
+
+    /**
+     * Process text left when exists
+     */
+    if (props.textLeft) {
+      const textNode = this.getRawNode(props.textLeft)
+      textNode.lineno = startPosition
+      this.consumeNode(textNode)
+    }
+
+    /**
+     * Then consume the actual mustache expression
+     */
+    this.consumeNode(this.getMustacheNode(props, startPosition))
+    this.mustacheStatement = null
+
+    /**
+     * Finally, there is no content to the right, then process
+     * it, otherwise add a new line token
+     */
+    if (props.textRight) {
+      this.processText(props.textRight)
+    } else {
+      this.consumeNode(this.getBlankLineNode())
+    }
+  }
+
+  /**
+   * Process a piece of text, by finding if text has reserved keywords,
+   * otherwise process it as a raw node.
+   *
+   * @param  {string} text
+   *
+   * @returns void
+   */
+  private processText (text: string): void {
+    /**
+     * Block statement is seeking for more content
+     */
+    if (this.isSeeking(this.blockStatement)) {
+      this.feedTextToBlockStatement(text)
       return
     }
 
     /**
-     * Line is opening of a tag
+     * Mustache statement is seeking for more content
      */
-    const tag = this.getTag(line)
+    if (this.isSeeking(this.mustacheStatement)) {
+      this.feedTextToMustacheStatement(text)
+      return
+    }
+
+    const tag = this.getTag(text)
+
+    /**
+     * Text is a escaped tag
+     */
     if (tag && tag.escaped) {
-      this.consumeNode(this.getRawNode(line.replace(/^\\/, '')))
+      this.consumeNode(this.getRawNode(text.replace(ESCAPE_REGEX, '$1')))
+      this.consumeNode(this.getBlankLineNode())
       return
     }
 
+    /**
+     * Text is a tag
+     */
     if (tag) {
-      this.currentStatement = new Statement(this.line, tag.seekable)
-      this.feedLineAsStatement(line)
+      this.blockStatement = new BlockStatement(this.line, tag.seekable)
+      this.feedTextToBlockStatement(text.trim().replace(TRIM_TAG_REGEX, ''))
       return
     }
 
     /**
-     * Line is closing of a tag
+     * Text is a closing block tag
      */
-    if (this.isClosingTag(line)) {
-      const tag = this.openedTags.pop()
-      tag.position.end = this.line
-      this.consumeNode(tag)
+    if (this.isClosingTag(text)) {
+      this.consumeNode(this.openedTags.pop())
+      this.consumeNode(this.getBlankLineNode())
       return
     }
 
     /**
-     * Line is a raw string
+     * Text contains mustache expressions
      */
-    this.consumeNode(this.getRawNode(line))
+    if (MUSTACHE_REGEX.test(text)) {
+      this.mustacheStatement = new MustacheStatement(this.line)
+      this.feedTextToMustacheStatement(text)
+      return
+    }
+
+    /**
+     * A plain raw node
+     */
+    this.consumeNode(this.getRawNode(text))
+    this.consumeNode(this.getBlankLineNode())
   }
 
   /**
@@ -242,7 +337,30 @@ class Tokenizer {
     const lines = this.template.split(EOL)
 
     while (lines.length) {
-      this.processLine(lines.shift())
+      this.line++
+      this.processText(lines.shift())
+    }
+
+    /**
+     * Process entire text, but there is an open statement, so we will
+     * process it as a raw node
+     */
+    if (this.blockStatement) {
+      this.consumeNode(this.getRawNode(`@${this.blockStatement.props.raw}`))
+      this.blockStatement = null
+      this.consumeNode(this.getBlankLineNode())
+    }
+
+    /**
+     * Process entire text, but there is an open statement, so we will
+     * process it as a raw node
+     */
+    if (this.mustacheStatement) {
+      const { textLeft, textRight, raw } = this.mustacheStatement.props
+      this.mustacheStatement = null
+
+      this.consumeNode(this.getRawNode(`${textLeft}${raw}${textRight}`))
+      this.consumeNode(this.getBlankLineNode())
     }
   }
 }
