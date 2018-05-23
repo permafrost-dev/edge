@@ -65,160 +65,323 @@
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
 				<h1 id="edge-lexer">Edge lexer</h1>
-				<p>Edge lexer detects tags from any markup language and converts into tokens. Later these tokens with a Javascript parser like <code>esprima</code> or <code>babylon</code> to complete a logical template engine ( this is what egde does ).</p>
-				<p>This guide covers the syntax and semantics of the Tags.</p>
-				<h2 id="what-is-a-tag-">What is a tag?</h2>
-				<p>A tag is block of code, which is used to define behavior in any markup language. A tag can be block level tag or an inline tag.</p>
-				<p>Lexer doesn&#39;t define the behavior of the tag, it&#39;s job is to recognize it and then parse it into tokens.</p>
-				<p><strong>Block level</strong></p>
-				<pre><code>Here <span class="hljs-keyword">is</span> <span class="hljs-keyword">some</span> <span class="hljs-built_in">text</span>
-
-@<span class="hljs-keyword">if</span>(isLogged)
- Your token <span class="hljs-keyword">is</span> <span class="hljs-number">12345678</span>
-@endif
-</code></pre><p><strong>Inline</strong></p>
-				<pre><code>@<span class="hljs-keyword">include</span>('<span class="hljs-keyword">some</span>-<span class="hljs-keyword">file</span>')
-</code></pre><p>The difference between a block and inline tag is that, a block level tag can contain body and an inline tag never contains a body.</p>
-				<p>Let&#39;s see some more examples to understand the syntax properly.</p>
-				<h4 id="simple-block-level">Simple block level</h4>
-				<pre><code><span class="hljs-variable">@if</span>(loggedIn)
-<span class="hljs-variable">@endif</span>
-</code></pre><h4 id="block-level-with-whitespace-">Block level (with whitespace)</h4>
-				<p>Edge lexer is whitespace tolerant.</p>
-				<pre><code><span class="hljs-variable">@if</span> (loggedIn)
-<span class="hljs-variable">@endif</span>
-</code></pre><h4 id="block-level-self-closing-">Block level (self closing)</h4>
-				<p>Optionally block level tags can self close themselves by adding <code>!</code> after the <code>@</code> symbol.</p>
-				<pre><code>@!<span class="hljs-keyword">component</span>('<span class="hljs-keyword">form</span>.<span class="hljs-keyword">input</span>')
-</code></pre><h4 id="block-level-multiple-lines-">Block level (multiple lines)</h4>
-				<p>Edge also allows splitting tag statements into multiple lines.</p>
-				<pre><code><span class="hljs-variable">@if</span>(
-  isLogged &amp;&amp;
-  isAdmin
-)
-
-<span class="hljs-variable">@endif</span>
-</code></pre><h4 id="simple-inline">Simple inline</h4>
-				<pre><code>@<span class="hljs-keyword">include</span>('<span class="hljs-keyword">partials</span>.<span class="hljs-keyword">header</span>')
-</code></pre><h4 id="inline-with-whitespace-">Inline (with whitespace)</h4>
-				<p>Just like <code>block</code> tags, inline tags can also have spaces.</p>
-				<pre><code>@<span class="hljs-keyword">include</span> (<span class="hljs-symbol">'partials</span>.header')
-</code></pre><h4 id="inline-multiple-lines-">Inline (multiple lines)</h4>
-				<pre><code><span class="hljs-meta">@include(
-  <span class="hljs-meta-string">'partials.header'</span>
-)</span>
-</code></pre><hr>
-				<h2 id="invalid-syntax">Invalid Syntax</h2>
-				<p>Above was the list of all the valid syntax to define/use a tag. Following is list of invalid syntax</p>
-				<h4 id="space-after-invalid-">Space after <code>@</code> [invalid]</h4>
-				<p>You cannot have a space after the <code>@</code> symbol.</p>
-				<pre><code>@ <span class="hljs-keyword">if</span>()
-
-<span class="hljs-meta">@endif</span>
-</code></pre><h4 id="must-be-at-beginning-of-the-line-invalid-">Must be at beginning of the line [invalid]</h4>
-				<p>Each tag statement must be in it&#39;s own line.</p>
+				<p>Edge lexer detects tags from any markup language and converts them into tokens. Later these tokens can be used with a Javascript parser like <code>esprima</code> or <code>babylon</code> to complete a logical template engine ( this is what Edge does ).</p>
+				<p>This guide is an outline of the lexer.</p>
+				<hr>
+				<h2 id="note">Note</h2>
+				<p>The code used in examples is only subject to work, when using Edge template engine. The lexer job is to tokenize the whitelisted syntax.</p>
+				<p>The real functionality is added by the template engine by using the tokens created from this package </p>
+				<hr>
+				<h2 id="features">Features</h2>
 				<ol>
-					<li><code>@&lt;tagname&gt;</code> in it&#39;s own line.</li>
-					<li><code>@end&lt;tagname&gt;</code> in it&#39;s own line too.</li>
+					<li>Allows multiline expressions.</li>
+					<li>Whitespaces and newlines are retained.</li>
+					<li>Works with any markup or plain text files.</li>
+					<li>Syntax is close to Javascript.</li>
 				</ol>
-				<pre><code>Hello <span class="hljs-meta">@if(username)</span>
-  {{ username }}
-<span class="hljs-meta">@endif</span>
-</code></pre><p>Following is also invalid</p>
-				<pre><code><span class="hljs-meta">@if(username)</span> {{ username }}
-<span class="hljs-meta">@endif</span>
-</code></pre><p>Or</p>
-				<pre><code><span class="hljs-meta">@if(username)</span> {{ username }} <span class="hljs-meta">@endif</span>
-</code></pre><h2 id="tokens">Tokens</h2>
-				<p>Following is the structure of the lexer Tokens.</p>
+				<h2 id="terms-used">Terms used</h2>
+				<p>This guide makes use of the following terms to identify core pieces of the tokenizer.</p>
+				<table>
+					<thead>
+						<tr>
+							<th>Term</th>
+							<th>Node Type</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>Tag</td>
+							<td>block</td>
+							<td>Tags are used to define logical blocks in the template engine. For example <code>if tag</code> or <code>include tag</code>.</td>
+						</tr>
+						<tr>
+							<td>Mustache</td>
+							<td>mustache</td>
+							<td>Javascript expression wrapped around curly braces. <code>{{ }}</code></td>
+						</tr>
+						<tr>
+							<td>Raw</td>
+							<td>raw</td>
+							<td>A raw string, which has no meaning for the template engine</td>
+						</tr>
+						<tr>
+							<td>NewLine</td>
+							<td>newline</td>
+							<td>Newline</td>
+						</tr>
+					</tbody>
+				</table>
+				<h2 id="nodes">Nodes</h2>
+				<p>Following is the list of Nodes returned by the tokenizer.</p>
+				<h4 id="block-node">Block Node</h4>
 				<pre><code class="lang-js">{
-  <span class="hljs-attr">type</span>: <span class="hljs-string">'&lt;NodeType&gt;'</span>,
-  <span class="hljs-attr">value</span>: <span class="hljs-string">'&lt;NodeValue&gt;'</span>,
-  <span class="hljs-attr">properties</span>: {},
-  <span class="hljs-attr">position</span>: {
-    <span class="hljs-attr">start</span>: <span class="hljs-number">1</span>,
-    <span class="hljs-attr">end</span>: <span class="hljs-number">2</span>
+  <span class="hljs-attr">type</span>: <span class="hljs-string">'block'</span>
+  lineno: number,
+  <span class="hljs-attr">properties</span>: Prop,
+  <span class="hljs-attr">children</span>: []
+}
+</code></pre>
+				<h4 id="raw-node">Raw Node</h4>
+				<pre><code class="lang-js">{
+  <span class="hljs-attr">type</span>: <span class="hljs-string">'raw'</span>,
+  <span class="hljs-attr">lineno</span>: number,
+  <span class="hljs-attr">value</span>: string
+}
+</code></pre>
+				<h4 id="mustache-node">Mustache Node</h4>
+				<pre><code class="lang-js">{
+  <span class="hljs-attr">type</span>: <span class="hljs-string">'mustache'</span>,
+  <span class="hljs-attr">lineno</span>: number,
+  <span class="hljs-attr">properties</span>: Prop
+}
+</code></pre>
+				<h4 id="newline-node">NewLine Node</h4>
+				<pre><code class="lang-js">{
+  <span class="hljs-attr">type</span>: <span class="hljs-string">'newline'</span>,
+  <span class="hljs-attr">lineno</span>: number
+}
+</code></pre>
+				<p><code>Block Node</code> is the only node, which contains recursive child nodes.</p>
+				<table>
+					<thead>
+						<tr>
+							<th>Key</th>
+							<th>Value</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>type</td>
+							<td>string</td>
+							<td>The type of node determines the behavior of node</td>
+						</tr>
+						<tr>
+							<td>lineno</td>
+							<td>number</td>
+							<td>The lineno in the source file</td>
+						</tr>
+						<tr>
+							<td>properties</td>
+							<td>Prop</td>
+							<td>Meta data for the node. See <a href="#properties">Properties</a> to more info.</td>
+						</tr>
+						<tr>
+							<td>value</td>
+							<td>string</td>
+							<td>If node is a raw node, then value is the string in the source file</td>
+						</tr>
+						<tr>
+							<td>children</td>
+							<td>array</td>
+							<td>Array of recursive nodes.</td>
+						</tr>
+					</tbody>
+				</table>
+				<h2 id="properties">Properties</h2>
+				<p>The properties <code>Prop</code> is used to define meta data for a given Node. Nodes like <code>raw</code> and <code>newline</code>, doesn&#39;t need any metadata. </p>
+				<h4 id="prop">Prop</h4>
+				<pre><code class="lang-js">{
+  <span class="hljs-attr">name</span>: string
+  jsArg: string,
+  <span class="hljs-attr">raw</span>: string
+}
+</code></pre>
+				<table>
+					<thead>
+						<tr>
+							<th>Key</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>name</td>
+							<td>The name is the subtype for a given node. For example: <code>if</code> will be the name of the <code>@if</code> tag.</td>
+						</tr>
+						<tr>
+							<td>jsArg</td>
+							<td>The <code>jsArg</code> is the Javascript expression to evaluate</td>
+						</tr>
+						<tr>
+							<td>raw</td>
+							<td>The raw representation of a given expression. Used for debugging purposes.</td>
+						</tr>
+					</tbody>
+				</table>
+				<h2 id="example">Example</h2>
+				<p>Before reading more about the syntax and their output, let&#39;s check the following example.</p>
+				<pre><code class="lang-html">@if(username)
+  <span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span> Hello {{ username }} <span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+@endif
+</code></pre>
+				<p>The output of the above text will be</p>
+				<pre><code class="lang-js">[
+  {
+    <span class="hljs-string">"type"</span>: <span class="hljs-string">"block"</span>,
+    <span class="hljs-string">"properties"</span>: {
+      <span class="hljs-string">"name"</span>: <span class="hljs-string">"if"</span>,
+      <span class="hljs-string">"jsArg"</span>: <span class="hljs-string">"username"</span>,
+      <span class="hljs-string">"raw"</span>: <span class="hljs-string">"if(username)"</span>
+    },
+    <span class="hljs-string">"lineno"</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-string">"children"</span>: [
+      {
+        <span class="hljs-string">"type"</span>: <span class="hljs-string">"newline"</span>,
+        <span class="hljs-string">"lineno"</span>: <span class="hljs-number">1</span>
+      },
+      {
+        <span class="hljs-string">"type"</span>: <span class="hljs-string">"raw"</span>,
+        <span class="hljs-string">"value"</span>: <span class="hljs-string">"&lt;h2&gt; Hello "</span>,
+        <span class="hljs-string">"lineno"</span>: <span class="hljs-number">2</span>
+      },
+      {
+        <span class="hljs-string">"type"</span>: <span class="hljs-string">"mustache"</span>,
+        <span class="hljs-string">"lineno"</span>: <span class="hljs-number">2</span>,
+        <span class="hljs-string">"properties"</span>: {
+          <span class="hljs-string">"name"</span>: <span class="hljs-string">"mustache"</span>,
+          <span class="hljs-string">"jsArg"</span>: <span class="hljs-string">" username "</span>,
+          <span class="hljs-string">"raw"</span>: <span class="hljs-string">"{{ username }}"</span>
+        }
+      },
+      {
+        <span class="hljs-string">"type"</span>: <span class="hljs-string">"raw"</span>,
+        <span class="hljs-string">"value"</span>: <span class="hljs-string">" &lt;/h2&gt;"</span>,
+        <span class="hljs-string">"lineno"</span>: <span class="hljs-number">2</span>
+      },
+      {
+        <span class="hljs-string">"type"</span>: <span class="hljs-string">"newline"</span>,
+        <span class="hljs-string">"lineno"</span>: <span class="hljs-number">2</span>
+      }
+    ]
   },
-  <span class="hljs-attr">children</span>: []        <span class="hljs-comment">// nested nodes</span>
-}
+  {
+    <span class="hljs-string">"type"</span>: <span class="hljs-string">"newline"</span>,
+    <span class="hljs-string">"lineno"</span>: <span class="hljs-number">3</span>
+  }
+]
 </code></pre>
-				<h4 id="type">type</h4>
-				<p>Type defines the type of the node. There are only 2 types of nodes.</p>
+				<h2 id="supported-syntax">Supported Syntax</h2>
+				<p>To make Edge an enjoyable template engine, we have kept the syntax very close the original Javascript syntax.</p>
+				<p>The following expressions are allowed.</p>
+				<h2 id="tags-block-">Tags (block)</h2>
 				<ol>
-					<li><strong>raw</strong> - The line of code with just markup.</li>
-					<li><strong>tag</strong> - The line(s) represents a tag.</li>
+					<li>Every block level tag starts with <code>@</code> symbol followed by the tagName.</li>
+					<li>It is important to close a block level using <code>@end&lt;tagName&gt;</code></li>
+					<li><code>@</code> and <code>tagName</code> cannot have spaces between them.</li>
 				</ol>
-				<h4 id="value">value</h4>
-				<p>The value will contain the raw text if type is <code>raw</code> and will be <code>undefined</code>, if type is <code>tag</code>.</p>
-				<h4 id="properties">properties</h4>
-				<p>The properties contains a key/value pair of properties related to the tag.</p>
-				<pre><code class="lang-js">{
-  <span class="hljs-attr">properties</span>: {
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'if'</span>   
-    jsArg: <span class="hljs-string">'2 + 2 === 4'</span>
-  }
+				<p><strong>VALID</strong></p>
+				<pre><code><span class="hljs-variable">@if</span>(username)
+<span class="hljs-variable">@endif</span>
+</code></pre><p><strong>VALID</strong></p>
+				<pre><code><span class="hljs-variable">@if</span>(
+  username
+)
+<span class="hljs-variable">@endif</span>
+</code></pre><p><strong>VALID</strong></p>
+				<pre><code>@if(
+  (
+    <span class="hljs-number">2</span> + <span class="hljs-number">2</span>
+  )
+  ===
+  <span class="hljs-number">4</span>
+)
+</code></pre><p><strong>VALID</strong></p>
+				<pre><code>@<span class="hljs-keyword">if</span>
+<span class="hljs-comment">(
+ username
+)</span>
+</code></pre><p><strong>INVALID</strong></p>
+				<p>The opening of the tag must be in it&#39;s own line and so do the closing one</p>
+				<pre><code><span class="hljs-variable">@if</span>(username) Hello <span class="hljs-variable">@endif</span>
+</code></pre><p><strong>INVALID</strong></p>
+				<pre><code><span class="hljs-variable">@if</span>(
+  username
+) &lt;p&gt; Hello &lt;/p&gt;
+<span class="hljs-variable">@endif</span>
+</code></pre><h2 id="tags-inline-">Tags (inline)</h2>
+				<p>The inline tags doesn&#39;t contain any childs and hence requires no <code>@end</code> statement.</p>
+				<p><strong>VALID</strong></p>
+				<pre><code><span class="hljs-meta">@include(<span class="hljs-meta-string">'header'</span>)</span>
+</code></pre><p><strong>VALID</strong></p>
+				<pre><code><span class="hljs-meta">@include(
+  <span class="hljs-meta-string">'header'</span>
+)</span>
+</code></pre><p><strong>VALID</strong></p>
+				<pre><code><span class="hljs-meta">@include</span>
+(
+  <span class="hljs-string">'header'</span>
+)
+</code></pre><h2 id="tags-block-self-closed-">Tags (block-self closed)</h2>
+				<p>At times block level tags can work fine without any body inside them. To keep the syntax concise, you can <strong>self-close</strong> a block level tag.</p>
+				<p><strong>NORMAL</strong></p>
+				<pre><code><span class="hljs-variable">@component</span>(<span class="hljs-string">'title'</span>)
+  &lt;h1&gt; Hello world &lt;/h1&gt;
+<span class="hljs-variable">@endcomponent</span>
+</code></pre><p><strong>SELF CLOSED</strong></p>
+				<pre><code>@!<span class="hljs-keyword">component</span>('<span class="hljs-keyword">title</span>', title = <span class="hljs-string">'&lt;h1&gt; Hello world &lt;/h1&gt;'</span>)
+</code></pre><h2 id="mustache">Mustache</h2>
+				<p>The mustache braces <code>{{</code> are used to define inline Javascript expressions. The lexer allows</p>
+				<ol>
+					<li>Multiline expressions</li>
+					<li>A valid Javascript expression, that yields to a value.</li>
+					<li>The return value is HTML escaped by Edge, so make sure to use <code>{{{ &#39;&lt;p&gt;&#39; Hello world &lt;/p&gt; }}}</code> for rendering HTML nodes.</li>
+				</ol>
+				<p><strong>VALID</strong></p>
+				<pre><code>{{ username }}
+</code></pre><p><strong>VALID</strong></p>
+				<pre><code>{{
+ username
+}}
+</code></pre><p><strong>VALID</strong></p>
+				<pre><code>Your friends are {{
+  users.map(<span class="hljs-function"><span class="hljs-params">(user)</span> =&gt;</span> {
+    <span class="hljs-keyword">return</span> user.username
+  }).join(<span class="hljs-string">','</span>)
+}}
+</code></pre><p><strong>VALID</strong></p>
+				<pre><code>{{{ <span class="hljs-string">'&lt;p&gt;'</span> Hello world &lt;/p&gt; }}}
+</code></pre><p><strong>INVALID</strong></p>
+				<p>The starting curly brace, must be in one line.</p>
+				<pre><code>{
+{
+  username
 }
-</code></pre>
-				<h4 id="position">position</h4>
-				<p>The position of the node in the raw code. Since Edge lexer deals with block level content only, there is no need to store <code>columns</code>.</p>
-				<p>Also line numbers are not based off <code>0</code> index.</p>
-				<pre><code class="lang-js">{
-  <span class="hljs-attr">position</span>: {
-    <span class="hljs-attr">start</span>: <span class="hljs-number">1</span>,
-    <span class="hljs-attr">end</span>: <span class="hljs-number">3</span>
-  }
 }
+</code></pre><h2 id="escaping">Escaping</h2>
+				<p>The backslash <code>\</code> is used for escaping mustache braces and tags.</p>
+				<blockquote>
+					<p>There is no need to escape the <code>@end</code> statements, since they are tightly mapped with the start statements. So if a start statement doesn&#39;t exists, the end statement will be considered as a raw node.</p>
+				</blockquote>
+				<pre><code>\<span class="hljs-variable">@if</span>(username)
+<span class="hljs-variable">@endif</span>
+</code></pre><p>yields</p>
+				<pre><code class="lang-json">[
+  {
+    <span class="hljs-attr">"type"</span>: <span class="hljs-string">"raw"</span>,
+    <span class="hljs-attr">"value"</span>: <span class="hljs-string">"@if(username)"</span>,
+    <span class="hljs-attr">"lineno"</span>: <span class="hljs-number">1</span>
+  },
+  {
+    <span class="hljs-attr">"type"</span>: <span class="hljs-string">"newline"</span>,
+    <span class="hljs-attr">"lineno"</span>: <span class="hljs-number">1</span>
+  },
+  {
+    <span class="hljs-attr">"type"</span>: <span class="hljs-string">"raw"</span>,
+    <span class="hljs-attr">"value"</span>: <span class="hljs-string">"@endif"</span>,
+    <span class="hljs-attr">"lineno"</span>: <span class="hljs-number">2</span>
+  },
+  {
+    <span class="hljs-attr">"type"</span>: <span class="hljs-string">"newline"</span>,
+    <span class="hljs-attr">"lineno"</span>: <span class="hljs-number">2</span>
+  }
+]
 </code></pre>
-				<h4 id="children">children</h4>
-				<p>Children will be an array of nested nodes.</p>
-				<h2 id="examples">Examples</h2>
-				<p>Let&#39;s see the output of couple of examples. We are using <code>HTML</code> as the markup language, however you are free to use any markup language.</p>
-				<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span> Page title <span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
-
-@if(username)
-  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span> Welcome {{ username }} <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
-@endif
-</code></pre>
-				<p>Output</p>
-				<pre><code><span class="hljs-string">[</span>
-  <span class="hljs-string">{</span>
-<span class="hljs-attr">    type:</span> <span class="hljs-string">'raw'</span><span class="hljs-string">,</span>
-<span class="hljs-attr">    value:</span> <span class="hljs-string">'&lt;h1&gt; Page title &lt;/h1&gt;'</span><span class="hljs-string">,</span>
-<span class="hljs-attr">    position:</span> <span class="hljs-string">{</span>
-<span class="hljs-attr">      start:</span> <span class="hljs-number">1</span><span class="hljs-string">,</span>
-<span class="hljs-attr">      end:</span> <span class="hljs-number">1</span>
-    <span class="hljs-string">}</span>
-  <span class="hljs-string">},</span>
-  <span class="hljs-string">{</span>
-<span class="hljs-attr">    type:</span> <span class="hljs-string">'raw'</span><span class="hljs-string">,</span>
-<span class="hljs-attr">    value:</span> <span class="hljs-string">''</span><span class="hljs-string">,</span>
-<span class="hljs-attr">    position:</span> <span class="hljs-string">{</span>
-<span class="hljs-attr">      start:</span> <span class="hljs-number">2</span><span class="hljs-string">,</span>
-<span class="hljs-attr">      end:</span> <span class="hljs-number">2</span>
-    <span class="hljs-string">}</span>
-  <span class="hljs-string">},</span>
-  <span class="hljs-string">{</span>
-<span class="hljs-attr">    type:</span> <span class="hljs-string">'tag'</span><span class="hljs-string">,</span>
-<span class="hljs-attr">    properties:</span> <span class="hljs-string">{</span>
-<span class="hljs-attr">      name:</span> <span class="hljs-string">'if'</span><span class="hljs-string">,</span>
-<span class="hljs-attr">      jsArg:</span> <span class="hljs-string">'username'</span>
-    <span class="hljs-string">},</span>
-<span class="hljs-attr">    position:</span> <span class="hljs-string">{</span>
-<span class="hljs-attr">      start:</span> <span class="hljs-number">3</span><span class="hljs-string">,</span>
-<span class="hljs-attr">      end:</span> <span class="hljs-number">5</span>
-    <span class="hljs-string">},</span>
-<span class="hljs-attr">    children:</span> <span class="hljs-string">[</span>
-      <span class="hljs-string">{</span>
-<span class="hljs-attr">        type:</span> <span class="hljs-string">'raw'</span><span class="hljs-string">,</span>
-<span class="hljs-attr">        value:</span> <span class="hljs-string">'&lt;p&gt; Welcome <span class="hljs-template-variable">{{ username }}</span> &lt;/p&gt;'</span><span class="hljs-string">,</span>
-<span class="hljs-attr">        position:</span> <span class="hljs-string">{</span>
-<span class="hljs-attr">          start:</span> <span class="hljs-number">4</span><span class="hljs-string">,</span>
-<span class="hljs-attr">          end:</span> <span class="hljs-number">4</span>
-        <span class="hljs-string">}</span>
-      <span class="hljs-string">}</span>
-    <span class="hljs-string">]</span>
-  <span class="hljs-string">}</span>
-<span class="hljs-string">]</span>
+				<p>In the same fashion, the mustache braces can be escaped using <code>\</code>.</p>
+				<pre><code>Hello <span class="hljs-tag">\<span class="hljs-name">{</span><span class="hljs-string">{username}</span></span>}
+</code></pre><p>For legacy reasons, the <code>@</code> symbol can also be used for escaping mustache braces.</p>
+				<pre><code>Hello @{{username}}
 </code></pre>
 			</div>
 		</div>

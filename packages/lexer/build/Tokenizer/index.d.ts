@@ -1,3 +1,10 @@
+/**
+ * Tokenizer converts a bunch of text into an array of tokens. Later
+ * these tokens can be used to build the transformed text.
+ *
+ * Go through the README file to learn more about the syntax and
+ * the tokens output.
+ */
 declare class Tokenizer {
     private template;
     private tagsDef;

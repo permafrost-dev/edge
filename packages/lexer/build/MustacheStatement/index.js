@@ -12,8 +12,30 @@
 */
 const Contracts_1 = require("../Contracts");
 const CharBucket = require("../CharBucket");
+/** @hidden */
 const OPENING_BRACE = 123;
+/** @hidden */
 const CLOSING_BRACE = 125;
+/**
+ * The mustache statement parses the content inside the curly
+ * braces. Since the statement can be in multiple lines, this
+ * class seeks for more content unless closing braces are
+ * detected.
+ *
+ * ```
+ * const statement = new MustacheStatement(1)
+ * statement.feed('Hello {{ username }}!')
+ *
+ * console.log(statement.props)
+ * {
+ *   name: 'mustache',
+ *   jsArg: ' username ',
+ *   raw: '{{ username }}',
+ *   textLeft: 'Hello ',
+ *   textRight: '!'
+ * }
+ * ```
+ */
 class MustacheStatement {
     constructor(startPosition) {
         this.startPosition = startPosition;
@@ -120,8 +142,7 @@ class MustacheStatement {
         return false;
     }
     /**
-     * We are seeking for more content, when the found
-     * opening braces but waiting for curly braces.
+     * Returns `true` when seeking for more content.
      *
      * @returns boolean
      */
@@ -193,7 +214,8 @@ class MustacheStatement {
     }
     /**
      * Feed a new line to be parsed as mustache. For performance it is recommended
-     * to check that line contains alteast one `{{` statement and is not escaped.
+     * to check that line contains alteast one `{{` statement and is not escaped
+     * before calling this method.
      *
      * @param  {string} line
      *

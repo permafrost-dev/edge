@@ -69,6 +69,28 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>The mustache statement parses the content inside the curly
+							braces. Since the statement can be in multiple lines, this
+							class seeks for more content unless closing braces are
+						detected.</p>
+					</div>
+					<pre><code>const statement = <span class="hljs-keyword">new</span> MustacheStatement(<span class="hljs-number">1</span>)
+statement.feed(<span class="hljs-string">'Hello {{ username }}!'</span>)
+
+console.<span class="hljs-built_in">log</span>(statement.props)
+{
+  name: <span class="hljs-string">'mustache'</span>,
+  jsAr<span class="hljs-variable">g:</span> <span class="hljs-string">' username '</span>,
+  ra<span class="hljs-variable">w:</span> <span class="hljs-string">'{{ username }}'</span>,
+  textLef<span class="hljs-variable">t:</span> <span class="hljs-string">'Hello '</span>,
+  textRigh<span class="hljs-variable">t:</span> <span class="hljs-string">'!'</span>
+}
+</code></pre>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -99,8 +121,9 @@
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="lexer.mustachestatement.html#currentprop" class="tsd-kind-icon">current<wbr>Prop</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="lexer.mustachestatement.html#ended" class="tsd-kind-icon">ended</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="lexer.mustachestatement.html#internalbraces" class="tsd-kind-icon">internal<wbr>Braces</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="lexer.mustachestatement.html#internalprops" class="tsd-kind-icon">internal<wbr>Props</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="lexer.mustachestatement.html#props" class="tsd-kind-icon">props</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="lexer.mustachestatement.html#startposition" class="tsd-kind-icon">start<wbr>Position</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="lexer.mustachestatement.html#startposition" class="tsd-kind-icon">start<wbr>Position</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="lexer.mustachestatement.html#started" class="tsd-kind-icon">started</a></li>
 							</ul>
 						</section>
@@ -117,6 +140,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="lexer.mustachestatement.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="lexer.mustachestatement.html#isclosing" class="tsd-kind-icon">is<wbr>Closing</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="lexer.mustachestatement.html#processchar" class="tsd-kind-icon">process<wbr>Char</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="lexer.mustachestatement.html#setprop" class="tsd-kind-icon">set<wbr>Prop</a></li>
 							</ul>
 						</section>
 					</div>
@@ -134,7 +158,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in MustacheStatement/index.ts:24</li>
+									<li>Defined in MustacheStatement/index.ts:61</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -156,7 +180,7 @@
 					<div class="tsd-signature tsd-kind-icon">current<wbr>Prop<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in MustacheStatement/index.ts:23</li>
+							<li>Defined in MustacheStatement/index.ts:59</li>
 						</ul>
 					</aside>
 				</section>
@@ -167,9 +191,15 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/lexer.statement.html">Statement</a>.<a href="../interfaces/lexer.statement.html#ended">ended</a></p>
 						<ul>
-							<li>Defined in MustacheStatement/index.ts:21</li>
+							<li>Defined in MustacheStatement/index.ts:55</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether or not the statement has been ended. Once ended, you
+							cannot feed more content.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="internalbraces" class="tsd-anchor"></a>
@@ -177,7 +207,17 @@
 					<div class="tsd-signature tsd-kind-icon">internal<wbr>Braces<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in MustacheStatement/index.ts:24</li>
+							<li>Defined in MustacheStatement/index.ts:60</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="internalprops" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> internal<wbr>Props</h3>
+					<div class="tsd-signature tsd-kind-icon">internal<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in MustacheStatement/index.ts:61</li>
 						</ul>
 					</aside>
 				</section>
@@ -188,17 +228,17 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/lexer.statement.html">Statement</a>.<a href="../interfaces/lexer.statement.html#props">props</a></p>
 						<ul>
-							<li>Defined in MustacheStatement/index.ts:22</li>
+							<li>Defined in MustacheStatement/index.ts:57</li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="startposition" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> start<wbr>Position</h3>
+					<h3>start<wbr>Position</h3>
 					<div class="tsd-signature tsd-kind-icon">start<wbr>Position<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in MustacheStatement/index.ts:26</li>
+							<li>Defined in MustacheStatement/index.ts:63</li>
 						</ul>
 					</aside>
 				</section>
@@ -209,9 +249,16 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/lexer.statement.html">Statement</a>.<a href="../interfaces/lexer.statement.html#started">started</a></p>
 						<ul>
-							<li>Defined in MustacheStatement/index.ts:20</li>
+							<li>Defined in MustacheStatement/index.ts:49</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether or not the statement has been started. Statement
+								is considered as started, when opening curly braces
+							are detected.</p>
+						</div>
+					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -226,13 +273,12 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in MustacheStatement/index.ts:148</li>
+									<li>Defined in MustacheStatement/index.ts:190</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>We are seeking for more content, when the found
-									opening braces but waiting for curly braces.</p>
+									<p>Returns <code>true</code> when seeking for more content.</p>
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -254,13 +300,14 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/lexer.statement.html">Statement</a>.<a href="../interfaces/lexer.statement.html#feed">feed</a></p>
 								<ul>
-									<li>Defined in MustacheStatement/index.ts:200</li>
+									<li>Defined in MustacheStatement/index.ts:275</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Feed a new line to be parsed as mustache. For performance it is recommended
-									to check that line contains alteast one <code>{{</code> statement and is not escaped.</p>
+										to check that line contains alteast one <code>{{</code> statement and is not escaped
+									before calling this method.</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -286,7 +333,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in MustacheStatement/index.ts:57</li>
+									<li>Defined in MustacheStatement/index.ts:96</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -325,7 +372,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in MustacheStatement/index.ts:102</li>
+									<li>Defined in MustacheStatement/index.ts:143</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -360,7 +407,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in MustacheStatement/index.ts:161</li>
+									<li>Defined in MustacheStatement/index.ts:203</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -384,6 +431,30 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="setprop" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> set<wbr>Prop</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Prop<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in MustacheStatement/index.ts:262</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Sets the value from internal prop to the public prop
+									as a string</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<p>void</p>
+						</li>
+					</ul>
+				</section>
 			</section>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -402,6 +473,12 @@
 					<li class=" tsd-kind-enum tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../enums/lexer.nodetype.html" class="tsd-kind-icon">Node<wbr>Type</a>
 					</li>
+					<li class=" tsd-kind-enum tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../enums/lexer.whitespacemodes.html" class="tsd-kind-icon">White<wbr>Space<wbr>Modes</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="lexer.charbucket.html" class="tsd-kind-icon">Char<wbr>Bucket</a>
+					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-external-module">
@@ -419,10 +496,13 @@
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="lexer.mustachestatement.html#internalbraces" class="tsd-kind-icon">internal<wbr>Braces</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="lexer.mustachestatement.html#internalprops" class="tsd-kind-icon">internal<wbr>Props</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="lexer.mustachestatement.html#props" class="tsd-kind-icon">props</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="lexer.mustachestatement.html#startposition" class="tsd-kind-icon">start<wbr>Position</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
@@ -443,6 +523,9 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 								<a href="lexer.mustachestatement.html#processchar" class="tsd-kind-icon">process<wbr>Char</a>
 							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="lexer.mustachestatement.html#setprop" class="tsd-kind-icon">set<wbr>Prop</a>
+							</li>
 						</ul>
 					</li>
 				</ul>
@@ -454,37 +537,22 @@
 						<a href="lexer.tokenizer.html" class="tsd-kind-icon">Tokenizer</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../interfaces/lexer.blocknode.html" class="tsd-kind-icon">Block<wbr>Node</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../interfaces/lexer.mustachenode.html" class="tsd-kind-icon">Mustache<wbr>Node</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../interfaces/lexer.mustacheprop.html" class="tsd-kind-icon">Mustache<wbr>Prop</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../interfaces/lexer.node.html" class="tsd-kind-icon">Node</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../interfaces/lexer.position.html" class="tsd-kind-icon">Position</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../interfaces/lexer.prop.html" class="tsd-kind-icon">Prop</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../interfaces/lexer.statement.html" class="tsd-kind-icon">Statement</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../modules/lexer.html#closing_brace" class="tsd-kind-icon">CLOSING_<wbr>BRACE</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../modules/lexer.html#closing_brace-1" class="tsd-kind-icon">CLOSING_<wbr>BRACE</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../modules/lexer.html#opening_brace" class="tsd-kind-icon">OPENING_<wbr>BRACE</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../modules/lexer.html#opening_brace-1" class="tsd-kind-icon">OPENING_<wbr>BRACE</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../modules/lexer.html#tag_regex" class="tsd-kind-icon">TAG_<wbr>REGEX</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../modules/lexer.html#whitespaceregex" class="tsd-kind-icon">whitespace<wbr>Regex</a>
 					</li>
 				</ul>
 			</nav>

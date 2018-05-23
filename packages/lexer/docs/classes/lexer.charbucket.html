@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>NodeType | edge-lexer</title>
+	<title>CharBucket | edge-lexer</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -59,10 +59,10 @@
 					<a href="../modules/lexer.html">Lexer</a>
 				</li>
 				<li>
-					<a href="lexer.nodetype.html">NodeType</a>
+					<a href="lexer.charbucket.html">CharBucket</a>
 				</li>
 			</ul>
-			<h1>Enumeration NodeType</h1>
+			<h1>Class CharBucket</h1>
 		</div>
 	</div>
 </header>
@@ -71,65 +71,182 @@
 		<div class="col-8 col-content">
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Char bucket is used to control the white space inside
+							a string. You feed one character at a time to this
+							class and it will make sure the whitespace is
+						controlled as instructed.</p>
+					</div>
+					<p>There are 3 modes in total</p>
+					<ol>
+						<li>CONTROLLED - Only one whitspace at a time</li>
+						<li>NONE - Zero whitespaces</li>
+						<li>ALL - All whitespaces</li>
+					</ol>
+					<pre><code><span class="hljs-keyword">const</span> charBucket = <span class="hljs-keyword">new</span> CharBucket(WhiteSpaceModes.NONE)
+
+charBucket.feed(<span class="hljs-string">'h'</span>)
+charBucket.feed(<span class="hljs-string">'i'</span>)
+charBucket.feed(<span class="hljs-string">' '</span>)
+charBucket.feed(<span class="hljs-string">' '</span>)
+charBucket.feed(<span class="hljs-string">' '</span>)
+charBucket.feed(<span class="hljs-string">'!'</span>)
+
+<span class="hljs-comment">// Output</span>
+charBucket.<span class="hljs-built_in">get</span>() <span class="hljs-comment">// hi!</span>
+</code></pre>
 				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">CharBucket</span>
+					</li>
+				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
-						<section class="tsd-index-section tsd-is-not-exported">
-							<h3>Enumeration members</h3>
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum tsd-is-not-exported"><a href="lexer.nodetype.html#block" class="tsd-kind-icon">BLOCK</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum tsd-is-not-exported"><a href="lexer.nodetype.html#mustache" class="tsd-kind-icon">MUSTACHE</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum tsd-is-not-exported"><a href="lexer.nodetype.html#newline" class="tsd-kind-icon">NEWLINE</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum tsd-is-not-exported"><a href="lexer.nodetype.html#raw" class="tsd-kind-icon">RAW</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="lexer.charbucket.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="lexer.charbucket.html#chars" class="tsd-kind-icon">chars</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="lexer.charbucket.html#lastchar" class="tsd-kind-icon">last<wbr>Char</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="lexer.charbucket.html#whitespace" class="tsd-kind-icon">whitespace</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="lexer.charbucket.html#feed" class="tsd-kind-icon">feed</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="lexer.charbucket.html#get" class="tsd-kind-icon">get</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
-				<h2>Enumeration members</h2>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum tsd-is-not-exported">
-					<a name="block" class="tsd-anchor"></a>
-					<h3>BLOCK</h3>
-					<div class="tsd-signature tsd-kind-icon">BLOCK<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;block&quot;</span></div>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Char<wbr>Bucket<span class="tsd-signature-symbol">(</span>whitespace<span class="tsd-signature-symbol">: </span><a href="../enums/lexer.whitespacemodes.html" class="tsd-signature-type">WhiteSpaceModes</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="lexer.charbucket.html" class="tsd-signature-type">CharBucket</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in CharBucket/index.ts:45</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>whitespace: <a href="../enums/lexer.whitespacemodes.html" class="tsd-signature-type">WhiteSpaceModes</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="lexer.charbucket.html" class="tsd-signature-type">CharBucket</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="chars" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> chars</h3>
+					<div class="tsd-signature tsd-kind-icon">chars<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in Contracts/index.ts:6</li>
+							<li>Defined in CharBucket/index.ts:44</li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum tsd-is-not-exported">
-					<a name="mustache" class="tsd-anchor"></a>
-					<h3>MUSTACHE</h3>
-					<div class="tsd-signature tsd-kind-icon">MUSTACHE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;mustache&quot;</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="lastchar" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> last<wbr>Char</h3>
+					<div class="tsd-signature tsd-kind-icon">last<wbr>Char<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in Contracts/index.ts:9</li>
+							<li>Defined in CharBucket/index.ts:45</li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum tsd-is-not-exported">
-					<a name="newline" class="tsd-anchor"></a>
-					<h3>NEWLINE</h3>
-					<div class="tsd-signature tsd-kind-icon">NEWLINE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;newline&quot;</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="whitespace" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> whitespace</h3>
+					<div class="tsd-signature tsd-kind-icon">whitespace<span class="tsd-signature-symbol">:</span> <a href="../enums/lexer.whitespacemodes.html" class="tsd-signature-type">WhiteSpaceModes</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in Contracts/index.ts:8</li>
+							<li>Defined in CharBucket/index.ts:47</li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum tsd-is-not-exported">
-					<a name="raw" class="tsd-anchor"></a>
-					<h3>RAW</h3>
-					<div class="tsd-signature tsd-kind-icon">RAW<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;raw&quot;</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in Contracts/index.ts:7</li>
-						</ul>
-					</aside>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="feed" class="tsd-anchor"></a>
+					<h3>feed</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">feed<span class="tsd-signature-symbol">(</span>char<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in CharBucket/index.ts:68</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Feed a char to the bucket</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>char: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<p>void</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="get" class="tsd-anchor"></a>
+					<h3>get</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in CharBucket/index.ts:57</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns all chars recorded so far</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<p>string</p>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -146,41 +263,47 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-enum tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../enums/lexer.nodetype.html" class="tsd-kind-icon">Node<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../enums/lexer.whitespacemodes.html" class="tsd-kind-icon">White<wbr>Space<wbr>Modes</a>
+					</li>
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-enum tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="lexer.nodetype.html" class="tsd-kind-icon">Node<wbr>Type</a>
+					<li class="current tsd-kind-class tsd-parent-kind-external-module">
+						<a href="lexer.charbucket.html" class="tsd-kind-icon">Char<wbr>Bucket</a>
 						<ul>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum tsd-is-not-exported">
-								<a href="lexer.nodetype.html#block" class="tsd-kind-icon">BLOCK</a>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="lexer.charbucket.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum tsd-is-not-exported">
-								<a href="lexer.nodetype.html#mustache" class="tsd-kind-icon">MUSTACHE</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="lexer.charbucket.html#chars" class="tsd-kind-icon">chars</a>
 							</li>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum tsd-is-not-exported">
-								<a href="lexer.nodetype.html#newline" class="tsd-kind-icon">NEWLINE</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="lexer.charbucket.html#lastchar" class="tsd-kind-icon">last<wbr>Char</a>
 							</li>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum tsd-is-not-exported">
-								<a href="lexer.nodetype.html#raw" class="tsd-kind-icon">RAW</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="lexer.charbucket.html#whitespace" class="tsd-kind-icon">whitespace</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="lexer.charbucket.html#feed" class="tsd-kind-icon">feed</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="lexer.charbucket.html#get" class="tsd-kind-icon">get</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-enum tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="lexer.whitespacemodes.html" class="tsd-kind-icon">White<wbr>Space<wbr>Modes</a>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="lexer.mustachestatement.html" class="tsd-kind-icon">Mustache<wbr>Statement</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/lexer.charbucket.html" class="tsd-kind-icon">Char<wbr>Bucket</a>
+						<a href="lexer.tagstatement.html" class="tsd-kind-icon">Tag<wbr>Statement</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/lexer.mustachestatement.html" class="tsd-kind-icon">Mustache<wbr>Statement</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/lexer.tagstatement.html" class="tsd-kind-icon">Tag<wbr>Statement</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/lexer.tokenizer.html" class="tsd-kind-icon">Tokenizer</a>
+						<a href="lexer.tokenizer.html" class="tsd-kind-icon">Tokenizer</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../interfaces/lexer.blocknode.html" class="tsd-kind-icon">Block<wbr>Node</a>

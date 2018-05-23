@@ -14,11 +14,23 @@ const os_1 = require("os");
 const BlockStatement = require("../TagStatement");
 const MustacheStatement = require("../MustacheStatement");
 const Contracts_1 = require("../Contracts");
+/** @hidden */
 const TAG_REGEX = /^(\\)?@(?:!)?(\w+)/;
+/** @hidden */
 const IGNORED_MUSTACHE_REGEX = /@{{2}/;
+/** @hidden */
 const MUSTACHE_REGEX = /{{2}/;
+/** @hidden */
 const ESCAPE_REGEX = /^(\s*)\\/;
+/** @hidden */
 const TRIM_TAG_REGEX = /^@/;
+/**
+ * Tokenizer converts a bunch of text into an array of tokens. Later
+ * these tokens can be used to build the transformed text.
+ *
+ * Go through the README file to learn more about the syntax and
+ * the tokens output.
+ */
 class Tokenizer {
     constructor(template, tagsDef) {
         this.template = template;

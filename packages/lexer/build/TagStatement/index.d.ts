@@ -10,10 +10,36 @@
 * file that was distributed with this source code.
 */
 import { Prop, Statement } from '../Contracts';
+/**
+ * The tag statement parses multiline content inside
+ * an edge tag starting block.
+ *
+ * ```
+ * const statement = new TagStatement(1)
+ * statement.feed('@if(')
+ * statement.feed('username')
+ * statement.feed(')')
+ *
+ * console.log(statement.props)
+ * {
+ *   name: 'if',
+ *   jsArg: ' username ',
+ *   raw: 'if(\nusername\n)'
+ * }
+ * ```
+ */
 declare class TagStatement implements Statement {
     startPosition: number;
     private seekable;
+    /**
+     * Whether or not the statement has been started. This flag
+     * is set to true when we detect first `(`.
+     */
     started: boolean;
+    /**
+     * Whether or not statement is ended. This flag is set when last closing
+     * `)` is detected.
+     */
     ended: boolean;
     props: Prop;
     private currentProp;
@@ -119,8 +145,6 @@ declare class TagStatement implements Statement {
      * @param  {string} line
      *
      * @returns void
-     *
-     * @example
      *
      * ```js
      * statement.feed('if(2 + 2 === 4)')

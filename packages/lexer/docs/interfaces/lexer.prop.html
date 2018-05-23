@@ -90,9 +90,8 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="lexer.prop.html#jsarg" class="tsd-kind-icon">js<wbr>Arg</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="lexer.prop.html#jsargoffset" class="tsd-kind-icon">js<wbr>Arg<wbr>Offset</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="lexer.prop.html#name" class="tsd-kind-icon">name</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="lexer.prop.html#position" class="tsd-kind-icon">position</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="lexer.prop.html#raw" class="tsd-kind-icon">raw</a></li>
 							</ul>
 						</section>
 					</div>
@@ -106,17 +105,7 @@
 					<div class="tsd-signature tsd-kind-icon">js<wbr>Arg<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in Contracts/index.ts:20</li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-					<a name="jsargoffset" class="tsd-anchor"></a>
-					<h3>js<wbr>Arg<wbr>Offset</h3>
-					<div class="tsd-signature tsd-kind-icon">js<wbr>Arg<wbr>Offset<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in Contracts/index.ts:21</li>
+							<li>Defined in Contracts/index.ts:23</li>
 						</ul>
 					</aside>
 				</section>
@@ -126,17 +115,17 @@
 					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in Contracts/index.ts:19</li>
+							<li>Defined in Contracts/index.ts:22</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-					<a name="position" class="tsd-anchor"></a>
-					<h3>position</h3>
-					<div class="tsd-signature tsd-kind-icon">position<span class="tsd-signature-symbol">:</span> <a href="lexer.position.html" class="tsd-signature-type">Position</a></div>
+					<a name="raw" class="tsd-anchor"></a>
+					<h3>raw</h3>
+					<div class="tsd-signature tsd-kind-icon">raw<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in Contracts/index.ts:22</li>
+							<li>Defined in Contracts/index.ts:24</li>
 						</ul>
 					</aside>
 				</section>
@@ -158,6 +147,12 @@
 					<li class=" tsd-kind-enum tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../enums/lexer.nodetype.html" class="tsd-kind-icon">Node<wbr>Type</a>
 					</li>
+					<li class=" tsd-kind-enum tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../enums/lexer.whitespacemodes.html" class="tsd-kind-icon">White<wbr>Space<wbr>Modes</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="../classes/lexer.charbucket.html" class="tsd-kind-icon">Char<wbr>Bucket</a>
+					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
 						<a href="../classes/lexer.mustachestatement.html" class="tsd-kind-icon">Mustache<wbr>Statement</a>
 					</li>
@@ -168,13 +163,16 @@
 						<a href="../classes/lexer.tokenizer.html" class="tsd-kind-icon">Tokenizer</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="lexer.blocknode.html" class="tsd-kind-icon">Block<wbr>Node</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="lexer.mustachenode.html" class="tsd-kind-icon">Mustache<wbr>Node</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="lexer.mustacheprop.html" class="tsd-kind-icon">Mustache<wbr>Prop</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="lexer.node.html" class="tsd-kind-icon">Node</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="lexer.position.html" class="tsd-kind-icon">Position</a>
 					</li>
 				</ul>
 				<ul class="current">
@@ -185,13 +183,10 @@
 								<a href="lexer.prop.html#jsarg" class="tsd-kind-icon">js<wbr>Arg</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-								<a href="lexer.prop.html#jsargoffset" class="tsd-kind-icon">js<wbr>Arg<wbr>Offset</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
 								<a href="lexer.prop.html#name" class="tsd-kind-icon">name</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-								<a href="lexer.prop.html#position" class="tsd-kind-icon">position</a>
+								<a href="lexer.prop.html#raw" class="tsd-kind-icon">raw</a>
 							</li>
 						</ul>
 					</li>
@@ -199,24 +194,6 @@
 				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="lexer.statement.html" class="tsd-kind-icon">Statement</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../modules/lexer.html#closing_brace" class="tsd-kind-icon">CLOSING_<wbr>BRACE</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../modules/lexer.html#closing_brace-1" class="tsd-kind-icon">CLOSING_<wbr>BRACE</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../modules/lexer.html#opening_brace" class="tsd-kind-icon">OPENING_<wbr>BRACE</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../modules/lexer.html#opening_brace-1" class="tsd-kind-icon">OPENING_<wbr>BRACE</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../modules/lexer.html#tag_regex" class="tsd-kind-icon">TAG_<wbr>REGEX</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../modules/lexer.html#whitespaceregex" class="tsd-kind-icon">whitespace<wbr>Regex</a>
 					</li>
 				</ul>
 			</nav>

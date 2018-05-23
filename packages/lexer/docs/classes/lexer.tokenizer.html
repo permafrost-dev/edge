@@ -69,6 +69,16 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Tokenizer converts a bunch of text into an array of tokens. Later
+						these tokens can be used to build the transformed text.</p>
+					</div>
+					<p>Go through the README file to learn more about the syntax and
+					the tokens output.</p>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -90,8 +100,9 @@
 						<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="lexer.tokenizer.html#currentstatement" class="tsd-kind-icon">current<wbr>Statement</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="lexer.tokenizer.html#blockstatement" class="tsd-kind-icon">block<wbr>Statement</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="lexer.tokenizer.html#line" class="tsd-kind-icon">line</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="lexer.tokenizer.html#mustachestatement" class="tsd-kind-icon">mustache<wbr>Statement</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="lexer.tokenizer.html#openedtags" class="tsd-kind-icon">opened<wbr>Tags</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="lexer.tokenizer.html#tagsdef" class="tsd-kind-icon">tags<wbr>Def</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="lexer.tokenizer.html#template" class="tsd-kind-icon">template</a></li>
@@ -99,25 +110,21 @@
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
-							<h3>Accessors</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="lexer.tokenizer.html#recentopenedtag" class="tsd-kind-icon">recent<wbr>Opened<wbr>Tag</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="lexer.tokenizer.html#consumenode" class="tsd-kind-icon">consume<wbr>Node</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="lexer.tokenizer.html#consumestatement" class="tsd-kind-icon">consume<wbr>Statement</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="lexer.tokenizer.html#feedlineasstatement" class="tsd-kind-icon">feed<wbr>Line<wbr>AsStatement</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="lexer.tokenizer.html#getrawnode" class="tsd-kind-icon">get<wbr>Raw<wbr>Node</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="lexer.tokenizer.html#gettag" class="tsd-kind-icon">get<wbr>Tag</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="lexer.tokenizer.html#gettagnode" class="tsd-kind-icon">get<wbr>Tag<wbr>Node</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="lexer.tokenizer.html#isclosingtag" class="tsd-kind-icon">is<wbr>Closing<wbr>Tag</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="lexer.tokenizer.html#isstatementseeked" class="tsd-kind-icon">is<wbr>Statement<wbr>Seeked</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="lexer.tokenizer.html#isstatementseeking" class="tsd-kind-icon">is<wbr>Statement<wbr>Seeking</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="lexer.tokenizer.html#consumenode" class="tsd-kind-icon">consume<wbr>Node</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="lexer.tokenizer.html#feedtexttoblockstatement" class="tsd-kind-icon">feed<wbr>Text<wbr>ToBlock<wbr>Statement</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="lexer.tokenizer.html#feedtexttomustachestatement" class="tsd-kind-icon">feed<wbr>Text<wbr>ToMustache<wbr>Statement</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="lexer.tokenizer.html#getblanklinenode" class="tsd-kind-icon">get<wbr>Blank<wbr>Line<wbr>Node</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="lexer.tokenizer.html#getmustachenode" class="tsd-kind-icon">get<wbr>Mustache<wbr>Node</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="lexer.tokenizer.html#getrawnode" class="tsd-kind-icon">get<wbr>Raw<wbr>Node</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="lexer.tokenizer.html#gettag" class="tsd-kind-icon">get<wbr>Tag</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="lexer.tokenizer.html#gettagnode" class="tsd-kind-icon">get<wbr>Tag<wbr>Node</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="lexer.tokenizer.html#isclosingtag" class="tsd-kind-icon">is<wbr>Closing<wbr>Tag</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="lexer.tokenizer.html#isseeked" class="tsd-kind-icon">is<wbr>Seeked</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="lexer.tokenizer.html#isseeking" class="tsd-kind-icon">is<wbr>Seeking</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="lexer.tokenizer.html#parse" class="tsd-kind-icon">parse</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="lexer.tokenizer.html#processline" class="tsd-kind-icon">process<wbr>Line</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="lexer.tokenizer.html#processtext" class="tsd-kind-icon">process<wbr>Text</a></li>
 							</ul>
 						</section>
 					</div>
@@ -135,7 +142,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in Tokenizer/index.ts:24</li>
+									<li>Defined in Tokenizer/index.ts:46</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -155,12 +162,12 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="currentstatement" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> current<wbr>Statement</h3>
-					<div class="tsd-signature tsd-kind-icon">current<wbr>Statement<span class="tsd-signature-symbol">:</span> <a href="../interfaces/lexer.statement.html" class="tsd-signature-type">Statement</a></div>
+					<a name="blockstatement" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> block<wbr>Statement</h3>
+					<div class="tsd-signature tsd-kind-icon">block<wbr>Statement<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BlockStatement</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in Tokenizer/index.ts:22</li>
+							<li>Defined in Tokenizer/index.ts:43</li>
 						</ul>
 					</aside>
 				</section>
@@ -170,17 +177,27 @@
 					<div class="tsd-signature tsd-kind-icon">line<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in Tokenizer/index.ts:24</li>
+							<li>Defined in Tokenizer/index.ts:45</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="mustachestatement" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> mustache<wbr>Statement</h3>
+					<div class="tsd-signature tsd-kind-icon">mustache<wbr>Statement<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="lexer.mustachestatement.html" class="tsd-signature-type">MustacheStatement</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in Tokenizer/index.ts:44</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="openedtags" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> opened<wbr>Tags</h3>
-					<div class="tsd-signature tsd-kind-icon">opened<wbr>Tags<span class="tsd-signature-symbol">:</span> <a href="../interfaces/lexer.node.html" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol">[]</span></div>
+					<div class="tsd-signature tsd-kind-icon">opened<wbr>Tags<span class="tsd-signature-symbol">:</span> <a href="../interfaces/lexer.blocknode.html" class="tsd-signature-type">BlockNode</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in Tokenizer/index.ts:23</li>
+							<li>Defined in Tokenizer/index.ts:46</li>
 						</ul>
 					</aside>
 				</section>
@@ -190,7 +207,7 @@
 					<div class="tsd-signature tsd-kind-icon">tags<wbr>Def<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in Tokenizer/index.ts:26</li>
+							<li>Defined in Tokenizer/index.ts:48</li>
 						</ul>
 					</aside>
 				</section>
@@ -200,61 +217,34 @@
 					<div class="tsd-signature tsd-kind-icon">template<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in Tokenizer/index.ts:26</li>
+							<li>Defined in Tokenizer/index.ts:48</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="tokens" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> tokens</h3>
-					<div class="tsd-signature tsd-kind-icon">tokens<span class="tsd-signature-symbol">:</span> <a href="../interfaces/lexer.node.html" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol">[]</span></div>
+					<div class="tsd-signature tsd-kind-icon">tokens<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><a href="../interfaces/lexer.node.html" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/lexer.blocknode.html" class="tsd-signature-type">BlockNode</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in Tokenizer/index.ts:21</li>
+							<li>Defined in Tokenizer/index.ts:42</li>
 						</ul>
 					</aside>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Accessors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
-					<a name="recentopenedtag" class="tsd-anchor"></a>
-					<h3>recent<wbr>Opened<wbr>Tag</h3>
-					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> recentOpenedTag<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/lexer.node.html" class="tsd-signature-type">Node</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in Tokenizer/index.ts:39</li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Returns the recently opened block tag. It is used
-									to feed children unless the tag gets closed</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/lexer.node.html" class="tsd-signature-type">Node</a></h4>
-							<p>Node</p>
-						</li>
-					</ul>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
 					<a name="consumenode" class="tsd-anchor"></a>
-					<h3>consume<wbr>Node</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">consume<wbr>Node<span class="tsd-signature-symbol">(</span>tag<span class="tsd-signature-symbol">: </span><a href="../interfaces/lexer.node.html" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> consume<wbr>Node</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">consume<wbr>Node<span class="tsd-signature-symbol">(</span>tag<span class="tsd-signature-symbol">: </span><a href="../interfaces/lexer.node.html" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/lexer.blocknode.html" class="tsd-signature-type">BlockNode</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in Tokenizer/index.ts:182</li>
+									<li>Defined in Tokenizer/index.ts:195</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -266,7 +256,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>tag: <a href="../interfaces/lexer.node.html" class="tsd-signature-type">Node</a></h5>
+									<h5>tag: <a href="../interfaces/lexer.node.html" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/lexer.blocknode.html" class="tsd-signature-type">BlockNode</a></h5>
 									<div class="tsd-comment tsd-typography">
 									</div>
 								</li>
@@ -276,54 +266,30 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="consumestatement" class="tsd-anchor"></a>
-					<h3>consume<wbr>Statement</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">consume<wbr>Statement<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="feedtexttoblockstatement" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> feed<wbr>Text<wbr>ToBlock<wbr>Statement</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">feed<wbr>Text<wbr>ToBlock<wbr>Statement<span class="tsd-signature-symbol">(</span>text<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in Tokenizer/index.ts:149</li>
+									<li>Defined in Tokenizer/index.ts:212</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Consumes a statement when it&#39;s not seeking for more
-									content. This is basically a start of a tag.</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-							<p>void</p>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="feedlineasstatement" class="tsd-anchor"></a>
-					<h3>feed<wbr>Line<wbr>AsStatement</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">feed<wbr>Line<wbr>AsStatement<span class="tsd-signature-symbol">(</span>line<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in Tokenizer/index.ts:167</li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Here we feed the line to the current statement
-										and check whether it needs more content or
-									not.</p>
+									<p>Feeds the text to the currently opened block statement.
+										Make sure that <code>seeking</code> is true on the block
+									statement, before calling this method.</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>line: <span class="tsd-signature-type">string</span></h5>
+									<h5>text: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
 									</div>
 								</li>
@@ -333,17 +299,106 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="feedtexttomustachestatement" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> feed<wbr>Text<wbr>ToMustache<wbr>Statement</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">feed<wbr>Text<wbr>ToMustache<wbr>Statement<span class="tsd-signature-symbol">(</span>text<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in Tokenizer/index.ts:243</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Feeds text to the currently opened mustache statement. Make sure
+									to check <code>seeking</code> is true, before calling this method.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>text: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<p>void</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="getblanklinenode" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> get<wbr>Blank<wbr>Line<wbr>Node</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Blank<wbr>Line<wbr>Node<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/lexer.node.html" class="tsd-signature-type">Node</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in Tokenizer/index.ts:119</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns the node for a newline</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/lexer.node.html" class="tsd-signature-type">Node</a></h4>
+							<p>Node</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="getmustachenode" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> get<wbr>Mustache<wbr>Node</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Mustache<wbr>Node<span class="tsd-signature-symbol">(</span>properties<span class="tsd-signature-symbol">: </span><a href="../interfaces/lexer.prop.html" class="tsd-signature-type">Prop</a>, lineno<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/lexer.mustachenode.html" class="tsd-signature-type">MustacheNode</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in Tokenizer/index.ts:134</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns the mustache node</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>properties: <a href="../interfaces/lexer.prop.html" class="tsd-signature-type">Prop</a></h5>
+								</li>
+								<li>
+									<h5>lineno: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/lexer.mustachenode.html" class="tsd-signature-type">MustacheNode</a></h4>
+							<p>MustacheNode</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
 					<a name="getrawnode" class="tsd-anchor"></a>
-					<h3>get<wbr>Raw<wbr>Node</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> get<wbr>Raw<wbr>Node</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
 						<li class="tsd-signature tsd-kind-icon">get<wbr>Raw<wbr>Node<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/lexer.node.html" class="tsd-signature-type">Node</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in Tokenizer/index.ts:95</li>
+									<li>Defined in Tokenizer/index.ts:106</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -364,17 +419,17 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
 					<a name="gettag" class="tsd-anchor"></a>
-					<h3>get<wbr>Tag</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> get<wbr>Tag</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
 						<li class="tsd-signature tsd-kind-icon">get<wbr>Tag<span class="tsd-signature-symbol">(</span>line<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in Tokenizer/index.ts:51</li>
+									<li>Defined in Tokenizer/index.ts:64</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -399,17 +454,17 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
 					<a name="gettagnode" class="tsd-anchor"></a>
-					<h3>get<wbr>Tag<wbr>Node</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Tag<wbr>Node<span class="tsd-signature-symbol">(</span>properties<span class="tsd-signature-symbol">: </span><a href="../interfaces/lexer.prop.html" class="tsd-signature-type">Prop</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/lexer.node.html" class="tsd-signature-type">Node</a></li>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> get<wbr>Tag<wbr>Node</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Tag<wbr>Node<span class="tsd-signature-symbol">(</span>properties<span class="tsd-signature-symbol">: </span><a href="../interfaces/lexer.prop.html" class="tsd-signature-type">Prop</a>, lineno<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/lexer.blocknode.html" class="tsd-signature-type">BlockNode</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in Tokenizer/index.ts:76</li>
+									<li>Defined in Tokenizer/index.ts:90</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -421,26 +476,29 @@
 							<ul class="tsd-parameters">
 								<li>
 									<h5>properties: <a href="../interfaces/lexer.prop.html" class="tsd-signature-type">Prop</a></h5>
+								</li>
+								<li>
+									<h5>lineno: <span class="tsd-signature-type">number</span></h5>
 									<div class="tsd-comment tsd-typography">
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/lexer.node.html" class="tsd-signature-type">Node</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/lexer.blocknode.html" class="tsd-signature-type">BlockNode</a></h4>
 							<p>Node</p>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
 					<a name="isclosingtag" class="tsd-anchor"></a>
-					<h3>is<wbr>Closing<wbr>Tag</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> is<wbr>Closing<wbr>Tag</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
 						<li class="tsd-signature tsd-kind-icon">is<wbr>Closing<wbr>Tag<span class="tsd-signature-symbol">(</span>line<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in Tokenizer/index.ts:116</li>
+									<li>Defined in Tokenizer/index.ts:154</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -462,51 +520,65 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="isstatementseeked" class="tsd-anchor"></a>
-					<h3>is<wbr>Statement<wbr>Seeked</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">is<wbr>Statement<wbr>Seeked<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="isseeked" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> is<wbr>Seeked</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Seeked<span class="tsd-signature-symbol">(</span>statement<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BlockStatement</span><span class="tsd-signature-symbol"> | </span><a href="lexer.mustachestatement.html" class="tsd-signature-type">MustacheStatement</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in Tokenizer/index.ts:139</li>
+									<li>Defined in Tokenizer/index.ts:183</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Returns a boolean, telling that there is an open statement, but
-									not seeking for any more content.</p>
+									<p>Returns a boolean, telling if a given statement has ended or
+									not.</p>
 								</div>
 							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>statement: <span class="tsd-signature-type">BlockStatement</span><span class="tsd-signature-symbol"> | </span><a href="lexer.mustachestatement.html" class="tsd-signature-type">MustacheStatement</a></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 							<p>boolean</p>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="isstatementseeking" class="tsd-anchor"></a>
-					<h3>is<wbr>Statement<wbr>Seeking</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">is<wbr>Statement<wbr>Seeking<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="isseeking" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> is<wbr>Seeking</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Seeking<span class="tsd-signature-symbol">(</span>statement<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BlockStatement</span><span class="tsd-signature-symbol"> | </span><a href="lexer.mustachestatement.html" class="tsd-signature-type">MustacheStatement</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in Tokenizer/index.ts:129</li>
+									<li>Defined in Tokenizer/index.ts:171</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Returns a boolean, which tells whether the currentStatement is
-										seeking for more data or not. Since we allow multi line
-										statements, we need to wait for multiple lines to
-									processed until a statement gets over.</p>
+									<p>Returns a boolean, telling if a given statement is seeking
+									for more content or not</p>
 								</div>
 							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>statement: <span class="tsd-signature-type">BlockStatement</span><span class="tsd-signature-symbol"> | </span><a href="lexer.mustachestatement.html" class="tsd-signature-type">MustacheStatement</a></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 							<p>boolean</p>
 						</li>
@@ -522,7 +594,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in Tokenizer/index.ts:241</li>
+									<li>Defined in Tokenizer/index.ts:352</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -535,28 +607,29 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="processline" class="tsd-anchor"></a>
-					<h3>process<wbr>Line</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">process<wbr>Line<span class="tsd-signature-symbol">(</span>line<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="processtext" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> process<wbr>Text</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">process<wbr>Text<span class="tsd-signature-symbol">(</span>text<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in Tokenizer/index.ts:194</li>
+									<li>Defined in Tokenizer/index.ts:285</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Process one line at time</p>
+									<p>Process a piece of text, by finding if text has reserved keywords,
+									otherwise process it as a raw node.</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>line: <span class="tsd-signature-type">string</span></h5>
+									<h5>text: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
 									</div>
 								</li>
@@ -584,6 +657,12 @@
 					<li class=" tsd-kind-enum tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../enums/lexer.nodetype.html" class="tsd-kind-icon">Node<wbr>Type</a>
 					</li>
+					<li class=" tsd-kind-enum tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../enums/lexer.whitespacemodes.html" class="tsd-kind-icon">White<wbr>Space<wbr>Modes</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="lexer.charbucket.html" class="tsd-kind-icon">Char<wbr>Bucket</a>
+					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
 						<a href="lexer.mustachestatement.html" class="tsd-kind-icon">Mustache<wbr>Statement</a>
 					</li>
@@ -599,10 +678,13 @@
 								<a href="lexer.tokenizer.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="lexer.tokenizer.html#currentstatement" class="tsd-kind-icon">current<wbr>Statement</a>
+								<a href="lexer.tokenizer.html#blockstatement" class="tsd-kind-icon">block<wbr>Statement</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="lexer.tokenizer.html#line" class="tsd-kind-icon">line</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="lexer.tokenizer.html#mustachestatement" class="tsd-kind-icon">mustache<wbr>Statement</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="lexer.tokenizer.html#openedtags" class="tsd-kind-icon">opened<wbr>Tags</a>
@@ -616,46 +698,55 @@
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="lexer.tokenizer.html#tokens" class="tsd-kind-icon">tokens</a>
 							</li>
-							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
-								<a href="lexer.tokenizer.html#recentopenedtag" class="tsd-kind-icon">recent<wbr>Opened<wbr>Tag</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 								<a href="lexer.tokenizer.html#consumenode" class="tsd-kind-icon">consume<wbr>Node</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="lexer.tokenizer.html#consumestatement" class="tsd-kind-icon">consume<wbr>Statement</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="lexer.tokenizer.html#feedtexttoblockstatement" class="tsd-kind-icon">feed<wbr>Text<wbr>ToBlock<wbr>Statement</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="lexer.tokenizer.html#feedlineasstatement" class="tsd-kind-icon">feed<wbr>Line<wbr>AsStatement</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="lexer.tokenizer.html#feedtexttomustachestatement" class="tsd-kind-icon">feed<wbr>Text<wbr>ToMustache<wbr>Statement</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="lexer.tokenizer.html#getblanklinenode" class="tsd-kind-icon">get<wbr>Blank<wbr>Line<wbr>Node</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="lexer.tokenizer.html#getmustachenode" class="tsd-kind-icon">get<wbr>Mustache<wbr>Node</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 								<a href="lexer.tokenizer.html#getrawnode" class="tsd-kind-icon">get<wbr>Raw<wbr>Node</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 								<a href="lexer.tokenizer.html#gettag" class="tsd-kind-icon">get<wbr>Tag</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 								<a href="lexer.tokenizer.html#gettagnode" class="tsd-kind-icon">get<wbr>Tag<wbr>Node</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 								<a href="lexer.tokenizer.html#isclosingtag" class="tsd-kind-icon">is<wbr>Closing<wbr>Tag</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="lexer.tokenizer.html#isstatementseeked" class="tsd-kind-icon">is<wbr>Statement<wbr>Seeked</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="lexer.tokenizer.html#isseeked" class="tsd-kind-icon">is<wbr>Seeked</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="lexer.tokenizer.html#isstatementseeking" class="tsd-kind-icon">is<wbr>Statement<wbr>Seeking</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="lexer.tokenizer.html#isseeking" class="tsd-kind-icon">is<wbr>Seeking</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="lexer.tokenizer.html#parse" class="tsd-kind-icon">parse</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="lexer.tokenizer.html#processline" class="tsd-kind-icon">process<wbr>Line</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="lexer.tokenizer.html#processtext" class="tsd-kind-icon">process<wbr>Text</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../interfaces/lexer.blocknode.html" class="tsd-kind-icon">Block<wbr>Node</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../interfaces/lexer.mustachenode.html" class="tsd-kind-icon">Mustache<wbr>Node</a>
+					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../interfaces/lexer.mustacheprop.html" class="tsd-kind-icon">Mustache<wbr>Prop</a>
 					</li>
@@ -663,31 +754,10 @@
 						<a href="../interfaces/lexer.node.html" class="tsd-kind-icon">Node</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../interfaces/lexer.position.html" class="tsd-kind-icon">Position</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../interfaces/lexer.prop.html" class="tsd-kind-icon">Prop</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../interfaces/lexer.statement.html" class="tsd-kind-icon">Statement</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../modules/lexer.html#closing_brace" class="tsd-kind-icon">CLOSING_<wbr>BRACE</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../modules/lexer.html#closing_brace-1" class="tsd-kind-icon">CLOSING_<wbr>BRACE</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../modules/lexer.html#opening_brace" class="tsd-kind-icon">OPENING_<wbr>BRACE</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../modules/lexer.html#opening_brace-1" class="tsd-kind-icon">OPENING_<wbr>BRACE</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../modules/lexer.html#tag_regex" class="tsd-kind-icon">TAG_<wbr>REGEX</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../modules/lexer.html#whitespaceregex" class="tsd-kind-icon">whitespace<wbr>Regex</a>
 					</li>
 				</ul>
 			</nav>

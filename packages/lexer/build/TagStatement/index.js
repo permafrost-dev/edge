@@ -12,8 +12,28 @@
 */
 const Contracts_1 = require("../Contracts");
 const CharBucket = require("../CharBucket");
+/** @hidden */
 const OPENING_BRACE = 40;
+/** @hidden */
 const CLOSING_BRACE = 41;
+/**
+ * The tag statement parses multiline content inside
+ * an edge tag starting block.
+ *
+ * ```
+ * const statement = new TagStatement(1)
+ * statement.feed('@if(')
+ * statement.feed('username')
+ * statement.feed(')')
+ *
+ * console.log(statement.props)
+ * {
+ *   name: 'if',
+ *   jsArg: ' username ',
+ *   raw: 'if(\nusername\n)'
+ * }
+ * ```
+ */
 class TagStatement {
     constructor(startPosition, seekable = true) {
         this.startPosition = startPosition;
@@ -40,7 +60,7 @@ class TagStatement {
      * @returns boolean
      */
     get seeking() {
-        return this.started && !this.ended;
+        return !this.started || !this.ended;
     }
     /**
      * Returns a boolean telling if charcode should be considered
@@ -194,8 +214,6 @@ class TagStatement {
      * @param  {string} line
      *
      * @returns void
-     *
-     * @example
      *
      * ```js
      * statement.feed('if(2 + 2 === 4)')

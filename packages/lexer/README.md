@@ -1,234 +1,367 @@
 # Edge lexer
 
-Edge lexer detects tags from any markup language and converts into tokens. Later these tokens with a Javascript parser like `esprima` or `babylon` to complete a logical template engine ( this is what egde does ).
+Edge lexer detects tags from any markup language and converts them into tokens. Later these tokens can be used with a Javascript parser like `esprima` or `babylon` to complete a logical template engine ( this is what Edge does ).
 
-This guide covers the syntax and semantics of the Tags.
-
-## What is a tag?
-A tag is block of code, which is used to define behavior in any markup language. A tag can be block level tag or an inline tag.
-
-Lexer doesn't define the behavior of the tag, it's job is to recognize it and then parse it into tokens.
-
-**Block level**
-
-```
-Here is some text
-
-@if(isLogged)
- Your token is 12345678
-@endif
-```
-
-**Inline**
-
-```
-@include('some-file')
-```
-
-The difference between a block and inline tag is that, a block level tag can contain body and an inline tag never contains a body.
-
-Let's see some more examples to understand the syntax properly.
-
-#### Simple block level
-
-```
-@if(loggedIn)
-@endif
-```
-
-#### Block level (with whitespace)
-Edge lexer is whitespace tolerant.
-
-```
-@if (loggedIn)
-@endif
-```
-
-#### Block level (self closing)
-Optionally block level tags can self close themselves by adding `!` after the `@` symbol.
-
-```
-@!component('form.input')
-```
-
-#### Block level (multiple lines)
-Edge also allows splitting tag statements into multiple lines.
-
-```
-@if(
-  isLogged &&
-  isAdmin
-)
-
-@endif
-```
-
-#### Simple inline
-
-```
-@include('partials.header')
-```
-
-#### Inline (with whitespace)
-Just like `block` tags, inline tags can also have spaces.
-
-```
-@include ('partials.header')
-```
-
-#### Inline (multiple lines)
-
-```
-@include(
-  'partials.header'
-)
-```
+This guide is an outline of the lexer.
 
 ---
 
-## Invalid Syntax
+## Note
+The code used in examples is only subject to work, when using Edge template engine. The lexer job is to tokenize the whitelisted syntax.
 
-Above was the list of all the valid syntax to define/use a tag. Following is list of invalid syntax
+The real functionality is added by the template engine by using the tokens created from this package 
 
-#### Space after `@` [invalid]
-You cannot have a space after the `@` symbol.
+---
 
-```
-@ if()
+## Features
+1. Allows multiline expressions.
+2. Whitespaces and newlines are retained.
+3. Works with any markup or plain text files.
+4. Syntax is close to Javascript.
 
-@endif
-```
+## Terms used
+This guide makes use of the following terms to identify core pieces of the tokenizer.
 
-#### Must be at beginning of the line [invalid]
-Each tag statement must be in it's own line.
+| Term | Node Type | Description |
+|------|-----------|------------ |
+| Tag | block | Tags are used to define logical blocks in the template engine. For example `if tag` or `include tag`. |
+| Mustache | mustache | Javascript expression wrapped around curly braces. `{{ }}` |
+| Raw | raw | A raw string, which has no meaning for the template engine |
+| NewLine | newline | Newline |
 
-1. `@<tagname>` in it's own line.
-2. `@end<tagname>` in it's own line too.
+## Nodes
+Following is the list of Nodes returned by the tokenizer.
 
-```
-Hello @if(username)
-  {{ username }}
-@endif
-``` 
-
-Following is also invalid
-
-```
-@if(username) {{ username }}
-@endif
-```
-
-Or
-
-```
-@if(username) {{ username }} @endif
-```
-
-## Tokens
-Following is the structure of the lexer Tokens.
+#### Block Node
 
 ```js
 {
-  type: '<NodeType>',
-  value: '<NodeValue>',
-  properties: {},
-  position: {
-    start: 1,
-    end: 2
-  },
-  children: []        // nested nodes
+  type: 'block'
+  lineno: number,
+  properties: Prop,
+  children: []
 }
 ```
 
-#### type
-Type defines the type of the node. There are only 2 types of nodes.
-
-1. **raw** - The line of code with just markup.
-2. **tag** - The line(s) represents a tag.
-
-#### value
-The value will contain the raw text if type is `raw` and will be `undefined`, if type is `tag`.
-
-#### properties
-The properties contains a key/value pair of properties related to the tag.
+#### Raw Node
 
 ```js
 {
-  properties: {
-    name: 'if'   
-    jsArg: '2 + 2 === 4'
-  }
+  type: 'raw',
+  lineno: number,
+  value: string
 }
 ```
 
-#### position
-The position of the node in the raw code. Since Edge lexer deals with block level content only, there is no need to store `columns`.
-
-Also line numbers are not based off `0` index.
+#### Mustache Node
 
 ```js
 {
-  position: {
-    start: 1,
-    end: 3
-  }
+  type: 'mustache',
+  lineno: number,
+  properties: Prop
 }
 ```
 
-#### children
-Children will be an array of nested nodes.
+#### NewLine Node
 
-## Examples
-Let's see the output of couple of examples. We are using `HTML` as the markup language, however you are free to use any markup language.
+```js
+{
+  type: 'newline',
+  lineno: number
+}
+```
+
+`Block Node` is the only node, which contains recursive child nodes.
+
+| Key | Value | Description |
+|-----|------|-------------------|
+| type | string | The type of node determines the behavior of node |
+| lineno | number | The lineno in the source file
+| properties | Prop | Meta data for the node. See [Properties](#properties) to more info.
+| value | string | If node is a raw node, then value is the string in the source file
+| children | array | Array of recursive nodes.
+
+## Properties
+The properties `Prop` is used to define meta data for a given Node. Nodes like `raw` and `newline`, doesn't need any metadata. 
+
+#### Prop
+
+```js
+{
+  name: string
+  jsArg: string,
+  raw: string
+}
+```
+
+| Key | Description |
+|-------|------------|
+| name | The name is the subtype for a given node. For example: `if` will be the name of the `@if` tag. |
+| jsArg | The `jsArg` is the Javascript expression to evaluate |
+| raw | The raw representation of a given expression. Used for debugging purposes. |
+
+## Example
+Before reading more about the syntax and their output, let's check the following example.
 
 ```html
-<h1> Page title </h1>
-
 @if(username)
-  <p> Welcome {{ username }} </p>
+  <h2> Hello {{ username }} </h2>
 @endif
 ```
 
-Output
+The output of the above text will be
 
-```
+```js
 [
   {
-    type: 'raw',
-    value: '<h1> Page title </h1>',
-    position: {
-      start: 1,
-      end: 1
-    }
-  },
-  {
-    type: 'raw',
-    value: '',
-    position: {
-      start: 2,
-      end: 2
-    }
-  },
-  {
-    type: 'tag',
-    properties: {
-      name: 'if',
-      jsArg: 'username'
+    "type": "block",
+    "properties": {
+      "name": "if",
+      "jsArg": "username",
+      "raw": "if(username)"
     },
-    position: {
-      start: 3,
-      end: 5
-    },
-    children: [
+    "lineno": 1,
+    "children": [
       {
-        type: 'raw',
-        value: '<p> Welcome {{ username }} </p>',
-        position: {
-          start: 4,
-          end: 4
+        "type": "newline",
+        "lineno": 1
+      },
+      {
+        "type": "raw",
+        "value": "<h2> Hello ",
+        "lineno": 2
+      },
+      {
+        "type": "mustache",
+        "lineno": 2,
+        "properties": {
+          "name": "mustache",
+          "jsArg": " username ",
+          "raw": "{{ username }}"
         }
+      },
+      {
+        "type": "raw",
+        "value": " </h2>",
+        "lineno": 2
+      },
+      {
+        "type": "newline",
+        "lineno": 2
       }
     ]
+  },
+  {
+    "type": "newline",
+    "lineno": 3
   }
 ]
+```
+
+## Supported Syntax
+
+To make Edge an enjoyable template engine, we have kept the syntax very close the original Javascript syntax.
+
+The following expressions are allowed.
+
+## Tags (block)
+
+1. Every block level tag starts with `@` symbol followed by the tagName.
+2. It is important to close a block level using `@end<tagName>`
+3. `@` and `tagName` cannot have spaces between them.
+
+**VALID**
+
+```
+@if(username)
+@endif
+```
+
+**VALID**
+
+```
+@if(
+  username
+)
+@endif
+```
+
+**VALID**
+
+```
+@if(
+  (
+    2 + 2
+  )
+  ===
+  4
+)
+```
+
+**VALID**
+
+```
+@if
+(
+ username
+)
+```
+
+**INVALID**
+
+The opening of the tag must be in it's own line and so do the closing one
+
+```
+@if(username) Hello @endif
+```
+
+**INVALID**
+
+```
+@if(
+  username
+) <p> Hello </p>
+@endif
+```
+
+## Tags (inline)
+The inline tags doesn't contain any childs and hence requires no `@end` statement.
+
+**VALID**
+
+```
+@include('header')
+```
+
+**VALID**
+
+```
+@include(
+  'header'
+)
+```
+
+**VALID**
+
+```
+@include
+(
+  'header'
+)
+```
+
+## Tags (block-self closed)
+
+At times block level tags can work fine without any body inside them. To keep the syntax concise, you can **self-close** a block level tag.
+
+**NORMAL**
+
+```
+@component('title')
+  <h1> Hello world </h1>
+@endcomponent
+```
+
+**SELF CLOSED**
+
+```
+@!component('title', title = '<h1> Hello world </h1>')
+```
+
+## Mustache
+The mustache braces `{{` are used to define inline Javascript expressions. The lexer allows
+
+1. Multiline expressions
+2. A valid Javascript expression, that yields to a value.
+3. The return value is HTML escaped by Edge, so make sure to use `{{{ '<p>' Hello world </p> }}}` for rendering HTML nodes.
+
+**VALID**
+
+```
+{{ username }}
+```
+
+**VALID**
+
+```
+{{
+ username
+}}
+```
+
+**VALID**
+
+```
+Your friends are {{
+  users.map((user) => {
+    return user.username
+  }).join(',')
+}}
+```
+
+**VALID**
+
+```
+{{{ '<p>' Hello world </p> }}}
+```
+
+**INVALID**
+
+The starting curly brace, must be in one line.
+
+```
+{
+{
+  username
+}
+}
+```
+
+## Escaping
+
+The backslash `\` is used for escaping mustache braces and tags.
+
+> There is no need to escape the `@end` statements, since they are tightly mapped with the start statements. So if a start statement doesn't exists, the end statement will be considered as a raw node.
+
+```
+\@if(username)
+@endif
+```
+
+yields
+
+```json
+[
+  {
+    "type": "raw",
+    "value": "@if(username)",
+    "lineno": 1
+  },
+  {
+    "type": "newline",
+    "lineno": 1
+  },
+  {
+    "type": "raw",
+    "value": "@endif",
+    "lineno": 2
+  },
+  {
+    "type": "newline",
+    "lineno": 2
+  }
+]
+```
+
+In the same fashion, the mustache braces can be escaped using `\`.
+
+```
+Hello \{{username}}
+```
+
+For legacy reasons, the `@` symbol can also be used for escaping mustache braces.
+
+```
+Hello @{{username}}
 ```
