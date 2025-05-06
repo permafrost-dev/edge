@@ -38,7 +38,7 @@
     "@adonisjs/mrm-preset": "^4.1.2",
     "@adonisjs/require-ts": "^2.0.8",
     "@poppinss/dev-utils": "^1.1.5",
-    "@types/node": "^16.7.10",
+    "@types/node": "^16.18.126",
     "dedent-js": "^1.0.1",
     "del-cli": "^4.0.1",
     "doctoc": "^2.0.1",
